@@ -27,9 +27,15 @@ export default function Home() {
   const [clientWidth, setClientWidth] = useState(0);
 
   useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2600);
+    let count = 0;
+    const interval = setInterval(() => {
+      count++;
+      // wait for at least 6 greetings before hiding
+      if (count >= 5) {
+        clearInterval(interval);
+        setIsLoading(false);
+      }
+    }, 750); // same as Loader interval
 
     displayFancyLogs();
   }, []);
