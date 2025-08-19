@@ -11,22 +11,52 @@ const Work = ({ isDesktop }) => {
   const tabItems = useMemo(
     () => [
       {
-        title: "Grapevine",
-        value: "grapevine",
+        title: "Zyprova",
+        value: "zyprova",
         content: (
           <StickyScroll
             isDesktop={isDesktop}
-            contentItems={WORK_CONTENTS.GRAPEVINE}
+            contentItems={WORK_CONTENTS.ZYPROVA}
           />
         ),
       },
       {
-        title: "Dukaan",
-        value: "dukaan",
+        title: "GBSN Infotech",
+        value: "gbsn",
         content: (
           <StickyScroll
             isDesktop={isDesktop}
-            contentItems={WORK_CONTENTS.DUKAAN}
+            contentItems={WORK_CONTENTS.GBSN}
+          />
+        ),
+      },
+      {
+        title: "UNC Charlotte",
+        value: "uncc",
+        content: (
+          <StickyScroll
+            isDesktop={isDesktop}
+            contentItems={WORK_CONTENTS.UNCC}
+          />
+        ),
+      },
+      {
+        title: "LTI Mindtree",
+        value: "ltimindtree",
+        content: (
+          <StickyScroll
+            isDesktop={isDesktop}
+            contentItems={WORK_CONTENTS.LTIMINDTREE}
+          />
+        ),
+      },
+      {
+        title: "Coforge",
+        value: "coforge",
+        content: (
+          <StickyScroll
+            isDesktop={isDesktop}
+            contentItems={WORK_CONTENTS.COFORGE}
           />
         ),
       },
