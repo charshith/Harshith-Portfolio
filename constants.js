@@ -85,11 +85,22 @@ export const SKILLS = {
     "graphql",
     "django",
     "flask",
-    "nest",
+    "nest",      // not "nestjs"
     "angular",
   ],
-  databases: ["postgresql", "snowflake", "mysql", "mongodb"],
-  other: ["git", "docker", "aws", "kafka", "ci/cd"],
+  databases: [
+    "postgres",  // not "postgr"/"postgresql" (aliases supported, but use this)
+    "snowflake", // not "snowfl"
+    "mysql",
+    "mongodb",
+  ],
+  other: [
+    "git",
+    "docker",
+    "aws",
+    "kafka",
+    "cicd",      // "ci-cd" also works, but use this
+  ],
 };
 
 export const PROJECTS = [
