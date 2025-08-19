@@ -59,9 +59,7 @@ export default function Home() {
         <Loader />
       ) : (
         <>
-          <Header>
-            <Menu />
-          </Header>
+          <Header />
           <ProgressIndicator />
           <Cursor isDesktop={isDesktop} />
           <main className="flex flex-col">
