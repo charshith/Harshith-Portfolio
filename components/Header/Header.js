@@ -5,13 +5,15 @@ import SoundBar from "./SoundBar/SoundBar";
 import { MENULINKS } from "../../constants";
 
 const BRAND = "#EB7431";
+const TOP_STICKY_CUTOFF = 140; // show full nav until you scroll past this
 
 const Header = ({ children }) => {
   const [active, setActive] = useState("home");
   const [hovering, setHovering] = useState(false);
+  const [nearTop, setNearTop] = useState(true);
 
-  // mini (single-pill) only when NOT home and NOT hovering
-  const isMini = active !== "home" && !hovering;
+  // Collapse only when not near top, not on home, and not hovering
+  const isMini = !nearTop && active !== "home" && !hovering;
 
   const activeItem = useMemo(
     () => MENULINKS.find((m) => m.ref === active),
@@ -33,24 +35,51 @@ const Header = ({ children }) => {
     }
   }, []);
 
-  // Keep active synced with scroll
+  // Scroll spy (closest section to viewport center) + nearTop toggle
   useEffect(() => {
-    const sections = MENULINKS.map((l) =>
-      document.getElementById(l.ref)
-    ).filter(Boolean);
-    if (!sections.length) return;
+    let ticking = false;
 
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActive(entry.target.id);
-        });
-      },
-      { rootMargin: "-20% 0px -40% 0px", threshold: 0.2 }
-    );
+    const computeActive = () => {
+      setNearTop(window.scrollY < TOP_STICKY_CUTOFF);
 
-    sections.forEach((s) => io.observe(s));
-    return () => io.disconnect();
+      const viewportCenter = window.innerHeight / 2;
+      let bestId = "home";
+      let bestDist = Infinity;
+
+      for (const { ref } of MENULINKS) {
+        const el = document.getElementById(ref);
+        if (!el) continue;
+        const rect = el.getBoundingClientRect();
+        const visible = rect.bottom > 0 && rect.top < window.innerHeight;
+        const center = rect.top + rect.height / 2;
+        const dist = Math.abs(center - viewportCenter);
+        if (visible && dist < bestDist) {
+          bestDist = dist;
+          bestId = ref;
+        }
+      }
+
+      setActive(bestId);
+    };
+
+    const onScrollOrResize = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        computeActive();
+        ticking = false;
+      });
+    };
+
+    // initial run
+    computeActive();
+
+    window.addEventListener("scroll", onScrollOrResize, { passive: true });
+    window.addEventListener("resize", onScrollOrResize);
+    return () => {
+      window.removeEventListener("scroll", onScrollOrResize);
+      window.removeEventListener("resize", onScrollOrResize);
+    };
   }, []);
 
   return (
@@ -92,7 +121,6 @@ const Header = ({ children }) => {
             aria-label="Primary"
           >
             {isMini ? (
-              // Render ONLY the active pill in mini mode → no shuffle/jitter
               <a
                 key={active}
                 href={`#${active}`}
@@ -127,7 +155,7 @@ const Header = ({ children }) => {
         </div>
       </div>
 
-      {/* Brand color + single-pill behavior + SoundBar visibility fixes */}
+      {/* Brand color + single-pill behavior + SoundBar container */}
       <style jsx global>{`
         /* --- nav pills --- */
         .primary-nav .pill {
@@ -171,7 +199,7 @@ const Header = ({ children }) => {
           padding-right: 0.9rem;
         }
 
-        /* --- SoundBar container (no change to component) --- */
+        /* --- SoundBar container --- */
         .soundbar-wrap {
           position: relative;
           z-index: 10;
