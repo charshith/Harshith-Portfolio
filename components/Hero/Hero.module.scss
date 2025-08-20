@@ -1,11 +1,11 @@
 /* components/Hero/Hero.module.scss */
 $brand: #eb7431;
 
-/* Section background helpers */
+/* ===== Section ===== */
 .hero {
   position: relative;
 
-  /* gentle vignette to lift text area without hiding Spline */
+  /* subtle vignette to lift the left text area */
   &:before {
     content: "";
     position: absolute;
@@ -14,62 +14,147 @@ $brand: #eb7431;
     background: radial-gradient(
         60% 40% at 20% 40%,
         rgba(235, 116, 49, 0.14),
-        rgba(0, 0, 0, 0) 70%
+        transparent 70%
       ),
-      radial-gradient(
-        80% 60% at 10% 80%,
-        rgba(0, 0, 0, 0.65),
-        rgba(0, 0, 0, 0) 60%
-      );
-    filter: saturate(110%);
-    z-index: 0;
+      radial-gradient(80% 60% at 10% 80%, rgba(0, 0, 0, 0.65), transparent 60%);
+    z-index: 0; /* base layer */
   }
 }
 
-/* left block spacing tweaks on wide screens */
-.left {
-  max-width: 780px;
+/* ===== Particles (strictly behind text) ===== */
+.hero :global(.hero-particles) {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: min(56vw, 880px);
+  height: 100%;
+  z-index: 1; /* under text (text is z:2) */
+  opacity: 0.18; /* softer speckle */
+  mix-blend-mode: screen;
+  pointer-events: none; /* never block scroll/clicks */
+  -webkit-mask-image: linear-gradient(to right, #000 58%, transparent 85%);
+  mask-image: linear-gradient(to right, #000 58%, transparent 85%);
 }
 
-/* Intro tag */
+/* Optional helpers */
+.hero-subtitle {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  display: block;
+  line-height: 1.5;
+}
+.hero-title {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-top: 0.5rem;
+}
+
+/* ===== Left block (text) ===== */
+.left {
+  max-width: 780px;
+  position: relative;
+  z-index: 2; /* above particles */
+}
+
+/* Intro line */
 .intro {
   color: rgba(255, 255, 255, 0.7);
   letter-spacing: 0.06em;
+  margin-bottom: 0.35rem; /* breathing room above name */
   animation: fadeAppear 1s 0.2s both;
 }
 
-/* Name + underline pulse */
+/* Name line */
 .heroName {
   font-size: clamp(2.6rem, 6vw, 4.25rem);
   line-height: 1.05;
-  margin-top: 0.25rem;
-  margin-bottom: 0.75rem;
+  margin: 0.15rem 0 0.9rem; /* space below for underline */
+}
 
-  .emphasize {
-    position: relative;
+/* ===== Glitch effect ===== */
+.glitch {
+  display: inline-block;
+  position: relative;
+  line-height: 1.2; /* spacing buffer around effect */
+  padding-top: 0; /* don't push the word up */
+  z-index: 2;
+}
 
-    &::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      bottom: 0.6rem;
-      width: 100%;
-      height: 0.36rem;
-      border-radius: 1rem;
-      background-image: linear-gradient(
-        90deg,
-        $brand 0%,
-        rgba(255, 255, 255, 0) 96%
-      );
-      box-shadow: 0 0 18px rgba(235, 116, 49, 0.55);
-      transform-origin: left center;
-      animation: underlineGrow 1.2s cubic-bezier(0.85, 0, 0.35, 1) 0.6s both,
-        underlineGlow 2.2s ease-in-out 1.6s infinite alternate;
-    }
+/* class toggled from JS (must exist for CSS Modules) */
+.glitchOn {
+}
+
+.glitchText {
+  position: relative;
+  display: inline-block;
+  will-change: filter, transform;
+}
+
+.glitchText::before,
+.glitchText::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  clip-path: inset(0 0 0 0);
+  mix-blend-mode: screen;
+  filter: blur(0.8px);
+  opacity: 0.75;
+  pointer-events: none;
+}
+
+.glitchText::before {
+  color: #48a8ff;
+  transform: translate(-1px, 0);
+}
+.glitchText::after {
+  color: #ff58a6;
+  transform: translate(1px, 0);
+}
+
+.glitch.glitchOn .glitchText::before {
+  animation: glitchSlice 480ms steps(2, jump-both) 0ms 1;
+}
+.glitch.glitchOn .glitchText::after {
+  animation: glitchSlice 480ms steps(2, jump-both) 60ms 1;
+}
+.glitch.glitchOn .glitchText {
+  animation: glitchJitter 480ms linear 0ms 1;
+}
+
+/* ===== Brand underline (fixed placement) ===== */
+.emphasize {
+  position: relative;
+  display: inline-block; /* isolate box for ::after */
+  line-height: 1; /* stable baseline */
+  padding-bottom: 0.18rem;
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+
+    /* Anchor to the OUTSIDE bottom of the word,
+       independent of font metrics/line box */
+    top: 100%;
+    transform: translateY(0.18rem) scaleX(0); /* start hidden for grow anim */
+
+    height: 0.28rem;
+    border-radius: 0.9rem;
+    background-image: linear-gradient(
+      90deg,
+      $brand 0%,
+      rgba(255, 255, 255, 0) 96%
+    );
+    box-shadow: 0 0 18px rgba(235, 116, 49, 0.55);
+    transform-origin: left center;
+
+    animation: underlineGrow 1.2s cubic-bezier(0.85, 0, 0.35, 1) 0.6s forwards,
+      underlineGlow 2.2s ease-in-out 1.6s infinite alternate;
   }
 }
 
-/* Spline wrapper: size + subtle mask so it blends into bg */
+/* ===== Spline wrapper (right) ===== */
 .splineWrap {
   position: absolute;
   right: 0;
@@ -78,17 +163,18 @@ $brand: #eb7431;
   height: 100%;
   transform: translateZ(0);
   will-change: transform;
-  /* fade edge on overlap with text */
+  -webkit-mask-image: radial-gradient(
+    120% 100% at 80% 50%,
+    #000 60%,
+    transparent 100%
+  );
   mask-image: radial-gradient(120% 100% at 80% 50%, #000 60%, transparent 100%);
+  z-index: 2; /* same stack as text; particles are below */
 }
 
-
-
-/* Keyframes */
+/* ===== Keyframes ===== */
 @keyframes fadeAppear {
-  0% {
-    opacity: 0;
-  }
+  0%,
   50% {
     opacity: 0;
   }
@@ -96,13 +182,12 @@ $brand: #eb7431;
     opacity: 1;
   }
 }
-
 @keyframes underlineGrow {
   from {
-    transform: scaleX(0);
+    transform: translateY(0.18rem) scaleX(0);
   }
   to {
-    transform: scaleX(1);
+    transform: translateY(0.18rem) scaleX(1);
   }
 }
 @keyframes underlineGlow {
@@ -112,4 +197,52 @@ $brand: #eb7431;
   to {
     box-shadow: 0 0 22px rgba(235, 116, 49, 0.65);
   }
+}
+@keyframes glitchJitter {
+  0% {
+    transform: translate(0, 0);
+  }
+  30% {
+    transform: translate(-1px, 0);
+  }
+  60% {
+    transform: translate(1px, 0);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+@keyframes glitchSlice {
+  0% {
+    clip-path: inset(0 0 65% 0);
+  }
+  50% {
+    clip-path: inset(35% 0 0 0);
+  }
+  100% {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* Reduce-motion safety */
+@media (prefers-reduced-motion: reduce) {
+  .glitchText::before,
+  .glitchText::after {
+    display: none;
+  }
+  .emphasize::after,
+  .intro {
+    animation: none;
+  }
+}
+
+.typing-text::after {
+  content: "";
+  display: block;
+  height: 2px;
+  width: 100%;
+  background: #ff6a00;
+  margin-top: -2px; /* tighten gap */
+  position: relative;
+  top: -2px; /* nudges it upwards */
 }

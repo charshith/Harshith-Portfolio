@@ -3,20 +3,21 @@ import { useEffect, useRef, useLayoutEffect } from "react";
 import dynamic from "next/dynamic";
 import Typed from "typed.js";
 import gsap from "gsap";
-
+import { Howl } from "howler";
 import Button from "../Button/Button";
 import Profiles from "../Profiles/Profiles";
 import styles from "./Hero.module.scss";
 import { MENULINKS, TYPED_STRINGS } from "../../constants";
+import Particles from "./Particles/Particles";
 
 // Client-only Spline
 const Spline = dynamic(() => import("@splinetool/react-spline"), {
   ssr: false,
 });
 
-// Your Spline scene
 const SCENE_URL =
   "https://prod.spline.design/tnfeAtbETRJkZyh4/scene.splinecode?hideWatermark=true";
+const BRAND = "#EB7431";
 
 const TYPED_OPTIONS = {
   strings: TYPED_STRINGS,
@@ -27,14 +28,13 @@ const TYPED_OPTIONS = {
   loop: true,
 };
 
-const BRAND = "#EB7431";
-
 export default function Hero() {
   const sectionRef = useRef(null);
   const typedElementRef = useRef(null);
   const splineWrapRef = useRef(null);
+  const glitchRef = useRef(null);
 
-  // Fade-in + stagger for text
+  // Fade-in + stagger
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
       gsap
@@ -46,17 +46,16 @@ export default function Hero() {
           "<0.1"
         );
 
-      // Spline block: soft pop-in
       if (splineWrapRef.current) {
         gsap.fromTo(
           splineWrapRef.current,
-          { opacity: 0, scale: 0.98, filter: "blur(3px)" },
+          { opacity: 0, scale: 0.985, filter: "blur(3px)" },
           {
             opacity: 1,
             scale: 1,
             filter: "blur(0px)",
             duration: 1.0,
-            delay: 0.2,
+            delay: 0.15,
           }
         );
       }
@@ -64,47 +63,57 @@ export default function Hero() {
     return () => ctx.revert();
   }, []);
 
-  // Typed.js
+  // typed.js
   useEffect(() => {
     const typed = new Typed(typedElementRef.current, TYPED_OPTIONS);
     return () => typed.destroy();
   }, []);
 
-  // Mouse parallax for the Spline wrapper (subtle)
+  // Subtle parallax (rAF-smooth)
   useEffect(() => {
     const el = splineWrapRef.current;
     if (!el) return;
 
+    let raf = 0;
+    let targetX = 0,
+      targetY = 0;
+
     const onMove = (e) => {
-      const { innerWidth, innerHeight } = window;
-      const x = (e.clientX / innerWidth - 0.5) * 12; // range ~ -6..6
-      const y = (e.clientY / innerHeight - 0.5) * 12;
+      targetX = (e.clientX / window.innerWidth - 0.5) * 12;
+      targetY = (e.clientY / window.innerHeight - 0.5) * 12;
+      if (!raf) tick();
+    };
+
+    const tick = () => {
+      raf = requestAnimationFrame(tick);
       gsap.to(el, {
-        x,
-        y,
+        x: targetX,
+        y: targetY,
         duration: 0.6,
         ease: "power2.out",
       });
     };
 
     window.addEventListener("mousemove", onMove);
-    return () => window.removeEventListener("mousemove", onMove);
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      cancelAnimationFrame(raf);
+    };
   }, []);
 
+  // Wheel/touch forwarding (Spline never traps page scroll)
   useEffect(() => {
     const el = splineWrapRef.current;
     if (!el) return;
-  
+
     const onWheel = (e) => {
-      // let the page scroll instead of the canvas blocking it
+      // do not hijack zoom/gesture
+      if (e.ctrlKey) return;
       e.preventDefault();
       window.scrollBy({ top: e.deltaY, behavior: "auto" });
     };
-  
-    // must be passive:false to be able to preventDefault
     el.addEventListener("wheel", onWheel, { passive: false });
-  
-    // (optional) mobile touch scroll forwarding
+
     let startY = 0;
     const onTouchStart = (e) => (startY = e.touches[0].clientY);
     const onTouchMove = (e) => {
@@ -116,12 +125,27 @@ export default function Hero() {
     };
     el.addEventListener("touchstart", onTouchStart, { passive: true });
     el.addEventListener("touchmove", onTouchMove, { passive: false });
-  
+
     return () => {
       el.removeEventListener("wheel", onWheel);
       el.removeEventListener("touchstart", onTouchStart);
       el.removeEventListener("touchmove", onTouchMove);
     };
+  }, []);
+
+  // Glitch bursts (CSS Modules-friendly: toggle styles.glitchOn)
+  useEffect(() => {
+    const node = glitchRef.current;
+    if (!node) return;
+
+    let timer = 0;
+    const burst = () => {
+      node.classList.add(styles.glitchOn);
+      setTimeout(() => node.classList.remove(styles.glitchOn), 520);
+      timer = setTimeout(burst, 2600 + Math.random() * 2200);
+    };
+    timer = setTimeout(burst, 1500);
+    return () => clearTimeout(timer);
   }, []);
 
   return (
@@ -131,7 +155,7 @@ export default function Hero() {
       className={`${styles.hero} w-full flex md:items-center py-8 2xl:container mx-auto xl:px-20 md:px-12 px-4 min-h-screen relative mb-24`}
       style={{ opacity: 0 }}
     >
-      {/* global tweak for typed cursor */}
+      {/* typed cursor styling */}
       <style jsx global>{`
         .typed-cursor {
           font-size: 2rem;
@@ -139,19 +163,27 @@ export default function Hero() {
         }
       `}</style>
 
+      {/* PARTICLES — keep before text so it stays behind */}
+      <Particles />
+
       {/* LEFT — text */}
       <div
         className={`${styles.left} flex flex-col pt-40 md:pt-0 select-none z-10`}
       >
         <h5
-          className={`${styles.intro} font-mono font-medium staggered-reveal`}
+          className={`${styles.intro} font-mono font-medium staggered-reveal mb-4`}
         >
           Hi, my name is
         </h5>
 
         <h1 className={`${styles.heroName} text-white font-semibold`}>
-          <span className={`relative ${styles.emphasize} staggered-reveal`}>
-            Harshith
+          <span ref={glitchRef} className={`${styles.glitch} staggered-reveal`}>
+            <span
+              className={`${styles.glitchText} ${styles.emphasize}`}
+              data-text="Harshith"
+            >
+              Harshith
+            </span>
           </span>
           <span className="staggered-reveal"> Charugulla </span>
         </h1>
@@ -174,7 +206,7 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* RIGHT — Spline scene */}
+      {/* RIGHT — Spline */}
       <div
         ref={splineWrapRef}
         className={`${styles.splineWrap} hidden lg:block`}
