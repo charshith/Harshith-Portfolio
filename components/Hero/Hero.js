@@ -15,6 +15,7 @@ const Spline = dynamic(() => import("@splinetool/react-spline"), {
   ssr: false,
 });
 
+
 const SCENE_URL =
   "https://prod.spline.design/tnfeAtbETRJkZyh4/scene.splinecode?hideWatermark=true";
 const BRAND = "#EB7431";
@@ -33,7 +34,8 @@ export default function Hero() {
   const typedElementRef = useRef(null);
   const splineWrapRef = useRef(null);
   const glitchRef = useRef(null);
-
+  const glitchFirstRef = useRef(null);
+  const glitchLastRef  = useRef(null);
   // Fade-in + stagger
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
@@ -133,17 +135,29 @@ export default function Hero() {
     };
   }, []);
 
-  // Glitch bursts (CSS Modules-friendly: toggle styles.glitchOn)
+  // —— GLITCH BURSTS (random first/last/both) ——
   useEffect(() => {
-    const node = glitchRef.current;
-    if (!node) return;
+    const nodes = [glitchFirstRef.current, glitchLastRef.current].filter(
+      Boolean
+    );
+    if (!nodes.length) return;
 
-    let timer = 0;
+    let timer;
     const burst = () => {
-      node.classList.add(styles.glitchOn);
-      setTimeout(() => node.classList.remove(styles.glitchOn), 520);
+      // 70% chance single target, 30% chance both
+      const hitBoth = Math.random() < 0.3;
+      const targets = hitBoth
+        ? nodes
+        : [nodes[Math.floor(Math.random() * nodes.length)]];
+
+      targets.forEach((n) => n.classList.add(styles.glitchOn));
+      setTimeout(() => {
+        targets.forEach((n) => n.classList.remove(styles.glitchOn));
+      }, 520);
+
       timer = setTimeout(burst, 2600 + Math.random() * 2200);
     };
+
     timer = setTimeout(burst, 1500);
     return () => clearTimeout(timer);
   }, []);
@@ -177,15 +191,33 @@ export default function Hero() {
         </h5>
 
         <h1 className={`${styles.heroName} text-white font-semibold`}>
-          <span ref={glitchRef} className={`${styles.glitch} staggered-reveal`}>
+          <span className={styles.nameWrap}>
+            <span className={styles.nameAura} aria-hidden="true" />
+            {/* First name — underline + gradient + glitch */}
             <span
-              className={`${styles.glitchText} ${styles.emphasize}`}
-              data-text="Harshith"
+              ref={glitchFirstRef}
+              className={`${styles.glitch} staggered-reveal`}
             >
-              Harshith
+              <span
+                className={`${styles.glitchText} ${styles.nameGradient} ${styles.emphasize}`}
+                data-text="Harshith"
+              >
+                Harshith
+              </span>
+            </span>
+            {/* Space + Last name — gradient + glitch */}{" "}
+            <span
+              ref={glitchLastRef}
+              className={`${styles.glitch} staggered-reveal`}
+            >
+              <span
+                className={`${styles.glitchText} ${styles.nameGradient}`}
+                data-text="Charugulla"
+              >
+                Charugulla
+              </span>
             </span>
           </span>
-          <span className="staggered-reveal"> Charugulla </span>
         </h1>
 
         <p>

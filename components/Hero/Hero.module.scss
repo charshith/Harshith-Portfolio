@@ -5,7 +5,6 @@ $brand: #eb7431;
 .hero {
   position: relative;
 
-  /* subtle vignette to lift the left text area */
   &:before {
     content: "";
     position: absolute;
@@ -17,25 +16,25 @@ $brand: #eb7431;
         transparent 70%
       ),
       radial-gradient(80% 60% at 10% 80%, rgba(0, 0, 0, 0.65), transparent 60%);
-    z-index: 0; /* base layer */
+    z-index: 0;
   }
 }
 
-/* ===== Particles (strictly behind text) ===== */
+/* ===== Particles ===== */
 .hero :global(.hero-particles) {
   position: absolute;
   inset: 0 auto 0 0;
   width: min(56vw, 880px);
   height: 100%;
-  z-index: 1; /* under text (text is z:2) */
-  opacity: 0.18; /* softer speckle */
+  z-index: 1;
+  opacity: 0.18;
   mix-blend-mode: screen;
-  pointer-events: none; /* never block scroll/clicks */
+  pointer-events: none;
   -webkit-mask-image: linear-gradient(to right, #000 58%, transparent 85%);
   mask-image: linear-gradient(to right, #000 58%, transparent 85%);
 }
 
-/* Optional helpers */
+/* ===== Text helpers ===== */
 .hero-subtitle {
   font-size: 1rem;
   margin-bottom: 0.5rem;
@@ -48,38 +47,115 @@ $brand: #eb7431;
   margin-top: 0.5rem;
 }
 
-/* ===== Left block (text) ===== */
+/* ===== Left block ===== */
 .left {
   max-width: 780px;
   position: relative;
-  z-index: 2; /* above particles */
+  z-index: 2;
 }
 
 /* Intro line */
 .intro {
   color: rgba(255, 255, 255, 0.7);
   letter-spacing: 0.06em;
-  margin-bottom: 0.35rem; /* breathing room above name */
+  margin-bottom: 0.35rem;
   animation: fadeAppear 1s 0.2s both;
 }
 
-/* Name line */
+/* ===== Name line ===== */
 .heroName {
   font-size: clamp(2.6rem, 6vw, 4.25rem);
   line-height: 1.05;
-  margin: 0.15rem 0 0.9rem; /* space below for underline */
+  margin: 0.15rem 0 0.9rem;
+  position: relative;
+}
+
+/* Aura wrapper */
+.nameWrap {
+  position: relative;
+  display: inline-block;
+  z-index: 2;
+}
+
+/* Soft aura behind name */
+.nameAura {
+  position: absolute;
+  inset: -12% -6% -16% -6%;
+  pointer-events: none;
+  z-index: -1;
+  filter: blur(18px) saturate(115%);
+  opacity: 0.35;
+  background: radial-gradient(
+      60% 40% at 20% 60%,
+      rgba(235, 116, 49, 0.26),
+      transparent 65%
+    ),
+    radial-gradient(
+      55% 45% at 55% 35%,
+      rgba(235, 116, 49, 0.18),
+      transparent 70%
+    ),
+    radial-gradient(
+      50% 45% at 80% 60%,
+      rgba(235, 116, 49, 0.14),
+      transparent 75%
+    );
+  animation: auraPulse 6.5s ease-in-out infinite alternate;
+}
+
+/* Aura animation */
+@keyframes auraPulse {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0.28;
+  }
+  50% {
+    transform: translateY(-2px) scale(1.02);
+    opacity: 0.36;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.3;
+  }
+}
+
+/* Gradient shimmer */
+.nameGradient {
+  background: linear-gradient(90deg, #ffffff 0%, #ffe7d6 40%, #ffffff 80%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: nameSheen 9s ease-in-out infinite;
+}
+
+@keyframes nameSheen {
+  0% {
+    background-position: 0% 50%;
+    filter: drop-shadow(0 0 0 rgba(235, 116, 49, 0));
+  }
+  40% {
+    background-position: 40% 50%;
+  }
+  50% {
+    background-position: 60% 50%;
+    filter: drop-shadow(0 0 6px rgba(235, 116, 49, 0.12));
+  }
+  100% {
+    background-position: 100% 50%;
+    filter: drop-shadow(0 0 0 rgba(235, 116, 49, 0));
+  }
 }
 
 /* ===== Glitch effect ===== */
 .glitch {
   display: inline-block;
   position: relative;
-  line-height: 1.2; /* spacing buffer around effect */
-  padding-top: 0; /* don't push the word up */
+  line-height: 1.2;
+  padding-top: 0;
   z-index: 2;
 }
 
-/* class toggled from JS (must exist for CSS Modules) */
 .glitchOn {
 }
 
@@ -101,7 +177,6 @@ $brand: #eb7431;
   opacity: 0.75;
   pointer-events: none;
 }
-
 .glitchText::before {
   color: #48a8ff;
   transform: translate(-1px, 0);
@@ -121,11 +196,11 @@ $brand: #eb7431;
   animation: glitchJitter 480ms linear 0ms 1;
 }
 
-/* ===== Brand underline (fixed placement) ===== */
+/* ===== Underline ===== */
 .emphasize {
   position: relative;
-  display: inline-block; /* isolate box for ::after */
-  line-height: 1; /* stable baseline */
+  display: inline-block;
+  line-height: 1;
   padding-bottom: 0.18rem;
 
   &::after {
@@ -133,12 +208,8 @@ $brand: #eb7431;
     position: absolute;
     left: 0;
     right: 0;
-
-    /* Anchor to the OUTSIDE bottom of the word,
-       independent of font metrics/line box */
     top: 100%;
-    transform: translateY(0.18rem) scaleX(0); /* start hidden for grow anim */
-
+    transform: translateY(0.18rem) scaleX(0);
     height: 0.28rem;
     border-radius: 0.9rem;
     background-image: linear-gradient(
@@ -148,13 +219,12 @@ $brand: #eb7431;
     );
     box-shadow: 0 0 18px rgba(235, 116, 49, 0.55);
     transform-origin: left center;
-
     animation: underlineGrow 1.2s cubic-bezier(0.85, 0, 0.35, 1) 0.6s forwards,
       underlineGlow 2.2s ease-in-out 1.6s infinite alternate;
   }
 }
 
-/* ===== Spline wrapper (right) ===== */
+/* ===== Spline wrapper ===== */
 .splineWrap {
   position: absolute;
   right: 0;
@@ -169,7 +239,7 @@ $brand: #eb7431;
     transparent 100%
   );
   mask-image: radial-gradient(120% 100% at 80% 50%, #000 60%, transparent 100%);
-  z-index: 2; /* same stack as text; particles are below */
+  z-index: 2;
 }
 
 /* ===== Keyframes ===== */
@@ -224,10 +294,12 @@ $brand: #eb7431;
   }
 }
 
-/* Reduce-motion safety */
+/* ===== Reduced motion ===== */
 @media (prefers-reduced-motion: reduce) {
   .glitchText::before,
-  .glitchText::after {
+  .glitchText::after,
+  .nameAura,
+  .nameGradient {
     display: none;
   }
   .emphasize::after,
@@ -236,13 +308,14 @@ $brand: #eb7431;
   }
 }
 
+/* Typing underline */
 .typing-text::after {
   content: "";
   display: block;
   height: 2px;
   width: 100%;
   background: #ff6a00;
-  margin-top: -2px; /* tighten gap */
+  margin-top: -2px;
   position: relative;
-  top: -2px; /* nudges it upwards */
+  top: -2px;
 }

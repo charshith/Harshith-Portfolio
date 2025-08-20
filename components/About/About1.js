@@ -1,3 +1,4 @@
+// components/About/About1.js
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
@@ -7,42 +8,57 @@ const About1 = ({ clientHeight }) => {
   const quoteRef = useRef(null);
 
   useLayoutEffect(() => {
-    const ctx = gsap.context(() => {
-      const tl = gsap
-        .timeline({
-          defaults: { ease: "none", duration: 0.1 },
-        })
-        .fromTo(
-          quoteRef.current.querySelector(".about-1"),
-          { opacity: 0.2 },
-          { opacity: 1 }
-        )
-        .to(quoteRef.current.querySelector(".about-1"), {
-          opacity: 0.2,
-          delay: 0.5,
-        })
-        .fromTo(
-          quoteRef.current.querySelector(".about-2"),
-          { opacity: 0.2 },
-          { opacity: 1 },
-          "<"
-        )
-        .to(quoteRef.current.querySelector(".about-2"), {
-          opacity: 0.2,
-          delay: 1,
-        });
+    gsap.registerPlugin(ScrollTrigger);
 
-      ScrollTrigger.create({
-        trigger: sectionRef.current,
-        start: "center 80%",
-        end: "center top",
-        scrub: 0,
-        animation: tl,
+    const ctx = gsap.context(() => {
+      const line1 = quoteRef.current.querySelector(".about-1");
+      const line2 = quoteRef.current.querySelector(".about-2");
+      const glow = quoteRef.current.querySelector(".about-glow");
+
+      // Initial state: L1 emphasized, L2 de-emphasized (but visible)
+      gsap.set(line1, { opacity: 1, y: 0 });
+      gsap.set(line2, { opacity: 0.45, y: 0 });
+      gsap.set(glow, { opacity: 0, scale: 0.96, filter: "blur(10px)" });
+
+      // Small entrance touch (runs once, not scrubbed)
+      gsap
+        .timeline({ defaults: { ease: "power2.out" } })
+        .to(glow, {
+          opacity: 0.4,
+          scale: 1,
+          filter: "blur(14px)",
+          duration: 0.5,
+        })
+        .to(glow, { opacity: 0, duration: 0.5 });
+
+      // Crossfade emphasis as you scroll through the block
+      const tl = gsap.timeline({
+        defaults: { ease: "none" },
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "center 80%", // when center of section hits 80% of viewport
+          end: "center 20%", // to 20% of viewport
+          scrub: 0.4, // smooth
+          onEnter: () => gsap.set([line1, line2], { clearProps: "willChange" }),
+          onLeave: () => {}, // keep final emphasis
+          onEnterBack: () => {}, // restore start emphasis on reverse
+          onLeaveBack: () => {}, // keep start emphasis
+        },
       });
-    });
+
+      // Map progress 0 → 1: L1 1→0.45, L2 0.45→1
+      tl.to(line1, { opacity: 0.45 }, 0).to(line2, { opacity: 1 }, 0);
+    }, sectionRef);
 
     return () => ctx.revert();
   }, []);
+
+  const scrollToNext = () => {
+    // Change "#skills" if your next section has a different id
+    document
+      .querySelector("#skills")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   return (
     <section ref={sectionRef} className="w-full relative select-none">
@@ -53,18 +69,116 @@ const About1 = ({ clientHeight }) => {
       >
         <h1
           ref={quoteRef}
-          className="font-medium text-[2.70rem] md:text-6xl lg:text-[4rem] text-center"
+          className="font-normal text-[2.2rem] md:text-6xl lg:text-[3.6rem] text-center leading-snug relative"
         >
-          <span className="about-1 leading-tight">
-            I&apos;m a passionate Engineer who&apos;s focused on building
-            scalable and performant apps.{" "}
+          {/* LINE 1 */}
+          <span className="about-1 leading-tight relative inline-block">
+            <span className="about-glow" aria-hidden="true" />
+            I&apos;m a{" "}
+            <span className="role-gradient font-semibold">
+              Full Stack Developer
+            </span>{" "}
+            passionate about designing scalable software and intuitive user
+            experiences across web and cloud platforms.
           </span>
-          <span className="about-2 leading-tight">
-            I take responsibility to craft a good user experience using modern
-            frontend architecture.{" "}
+
+          {/* LINE 2 */}
+          <span className="about-2 leading-tight block mt-6 text-gray-300">
+            Driven to build AI-enabled, data-driven applications that improve
+            decision-making and efficiency.
           </span>
         </h1>
       </div>
+
+
+      {/* Local styles */}
+      <style jsx>{`
+        .role-gradient {
+          background: linear-gradient(
+            90deg,
+            #eb7431 0%,
+            #ffa368 50%,
+            #ffd5b3 100%
+          );
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+          text-shadow: 0 0 16px rgba(235, 116, 49, 0.18);
+        }
+
+        .about-1 {
+          position: relative;
+        }
+        .about-glow {
+          position: absolute;
+          inset: -16% -6% -18% -6%;
+          border-radius: 24px;
+          background: radial-gradient(
+              40% 70% at 20% 60%,
+              rgba(235, 116, 49, 0.28),
+              transparent 70%
+            ),
+            radial-gradient(
+              60% 90% at 60% 40%,
+              rgba(235, 116, 49, 0.18),
+              transparent 75%
+            );
+          filter: blur(14px);
+          opacity: 0;
+          pointer-events: none;
+          z-index: -1;
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+          position: absolute;
+          left: 50%;
+          bottom: 22px;
+          transform: translateX(-50%);
+          width: 36px;
+          height: 56px;
+          border: 2px solid rgba(255, 255, 255, 0.35);
+          border-radius: 22px;
+          background: rgba(0, 0, 0, 0.25);
+          backdrop-filter: blur(6px);
+          display: flex;
+          align-items: flex-start;
+          justify-content: center;
+          transition: border-color 160ms ease, box-shadow 160ms ease,
+            transform 160ms ease;
+        }
+        .scroll-indicator:hover {
+          border-color: rgba(235, 116, 49, 0.8);
+          box-shadow: 0 0 24px rgba(235, 116, 49, 0.28);
+          transform: translateX(-50%) translateY(-2px);
+        }
+        .scroll-dot {
+          width: 6px;
+          height: 6px;
+          background: #fff;
+          border-radius: 999px;
+          margin-top: 10px;
+          animation: bounce 1.4s ease-in-out infinite;
+          box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+        }
+        @keyframes bounce {
+          0%,
+          100% {
+            transform: translateY(0);
+            opacity: 0.85;
+          }
+          50% {
+            transform: translateY(18px);
+            opacity: 0.35;
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .scroll-dot {
+            animation: none;
+          }
+        }
+      `}</style>
     </section>
   );
 };
