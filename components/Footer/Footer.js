@@ -1,72 +1,91 @@
-/* eslint-disable @next/next/no-img-element */
-import { useState } from "react";
-import { Fade } from "react-reveal";
-import { Howl } from "howler";
-import Button from "../Button/Button";
-import FooterBg from "./FooterBg/FooterBg";
-import Profiles from "../Profiles/Profiles";
-import { theme } from "tailwind.config";
-import { MENULINKS } from "../../constants";
+// components/Footer/Footer.js
+import Link from "next/link";
+import dynamic from "next/dynamic";
+import { useEffect, useRef, useState } from "react";
+import styles from "./FooterBg/FooterBg.module.scss";
+import Meteors from "./Meteors/Meteors";
 
-const Footer = () => {
-  const [playbackRate, setPlaybackRate] = useState(0.75);
+// Lazy-load Spline client only
+const Spline = dynamic(() => import("@splinetool/react-spline"), {
+  ssr: false,
+});
 
-  const heartClickSound = new Howl({
-    src: ["/sounds/glug-a.mp3"],
-    rate: playbackRate,
-    volume: 0.5,
-  });
+const SPLINE_SCENE =
+  "https://prod.spline.design/vRgmRBJiVfAG-496/scene.splinecode";
 
-  const handleClick = () => {
-    setPlaybackRate((rate) => rate + 0.1);
-    heartClickSound.play();
-  };
+export default function Footer() {
+  const [visible, setVisible] = useState(false);
+  const ref = useRef(null);
+
+  // Render the Spline canvas only when footer is on screen
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => setVisible(entry.isIntersecting),
+      { rootMargin: "200px 0px 200px 0px", threshold: 0 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  const year = new Date().getFullYear();
 
   return (
-    <footer
-      className="w-full relative select-none bg-cover"
-      style={{
-        backgroundImage: `linear-gradient(to right, ${theme.colors.indigo.light}, ${theme.colors.indigo.dark})`,
-      }}
-    >
-      <FooterBg />
-      <Fade bottom distance={"4rem"}>
-        <div className="w-full h-full pt-32">
-          <div className="section-container flex flex-col h-full justify-end z-10 items-center py-12">
-            <h1 className="font-medium text-3xl md:text-4xl text-center">
-              Feel free to connect on social media.
-            </h1>
-            <div className="text-center">
-              <Profiles />
-            </div>
-            <div className="pt-4 text-center">
-              <Button
-                href={`#${MENULINKS[4].ref}`}
-                classes="link"
-                type="secondary"
-              >
-                Let&apos;s Talk
-              </Button>
-            </div>
-            <p className="text-center text-white text-sm sm:text-base font-medium tracking-wide mt-8">
-              Developed with{" "}
-              <button onClick={handleClick} className="link cursor-none">
-                <span className="block animate-bounce">❤️</span>
-              </button>{" "}
-              by <span className="text-white">Harshith Charugulla</span>
-            </p>
-          </div>
+    <footer ref={ref} className="relative mt-28">
+      {/* Background area with Spline */}
+      <div className={`relative overflow-hidden ${styles.bgWrap}`}>
+        {/* Optional soft gradient overlay for contrast */}
+        <div className={styles.vignette} aria-hidden="true" />
+
+        {/* Only mount Spline when in view */}
+        {visible ? (
+          <Spline className={styles.splineCanvas} scene={SPLINE_SCENE} />
+        ) : (
+          <div className={styles.placeholder} />
+        )}
+
+        {/* Optional meteors on top of the scene */}
+        <div className="pointer-events-none absolute inset-0">
+          <Meteors count={16} />
         </div>
-      </Fade>
-      <img
-        src="/footer-curve.svg"
-        className="w-full rotate-180"
-        alt="footer curve"
-        loading="eager"
-        height={180}
-      />
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10 section-container py-10">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="text-gray-300 text-sm">
+            © {year} Harshith Charugulla. All rights reserved.
+          </div>
+
+          <nav className="flex items-center gap-6 text-sm">
+            <Link href="#home" className="link">
+              Home
+            </Link>
+            <Link href="#projects" className="link">
+              Projects
+            </Link>
+            <Link href="#contact" className="link">
+              Contact
+            </Link>
+            <a
+              href="mailto:you@example.com"
+              className="px-3 py-1.5 rounded-full border border-white/15 hover:border-white/30 transition"
+            >
+              Let’s Talk
+            </a>
+          </nav>
+        </div>
+      </div>
+
+      {/* back-to-top */}
+      <button
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        className="group fixed bottom-6 right-6 z-20 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-black/40 backdrop-blur hover:border-white/30 transition"
+        aria-label="Back to top"
+      >
+        ↑
+      </button>
     </footer>
   );
-};
-
-export default Footer;
+}

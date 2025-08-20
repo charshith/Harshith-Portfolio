@@ -1,48 +1,115 @@
+/* components/Hero/Hero.module.scss */
+$brand: #eb7431;
+
+/* Section background helpers */
+.hero {
+  position: relative;
+
+  /* gentle vignette to lift text area without hiding Spline */
+  &:before {
+    content: "";
+    position: absolute;
+    inset: -10% -5% 0 -5%;
+    pointer-events: none;
+    background: radial-gradient(
+        60% 40% at 20% 40%,
+        rgba(235, 116, 49, 0.14),
+        rgba(0, 0, 0, 0) 70%
+      ),
+      radial-gradient(
+        80% 60% at 10% 80%,
+        rgba(0, 0, 0, 0.65),
+        rgba(0, 0, 0, 0) 60%
+      );
+    filter: saturate(110%);
+    z-index: 0;
+  }
+}
+
+/* left block spacing tweaks on wide screens */
+.left {
+  max-width: 780px;
+}
+
+/* Intro tag */
 .intro {
-  animation: fadeAppear 1s 0.2s;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.06em;
+  animation: fadeAppear 1s 0.2s both;
 }
 
-.heroName{
-    line-height: 1.5em;
-    animation: fadeAppear 1.3s 0.3s;
+/* Name + underline pulse */
+.heroName {
+  font-size: clamp(2.6rem, 6vw, 4.25rem);
+  line-height: 1.05;
+  margin-top: 0.25rem;
+  margin-bottom: 0.75rem;
 
-    .emphasize {
-        &::after {
-            content: '';
-            position: absolute;
-            bottom: 0.7rem;
-            left: 0;
-            width: 100%;
-            height: 0.35rem;
-            border-radius: 1rem;
-            background-image: linear-gradient(to right, theme("colors.indigo.light"), theme("colors.indigo.dark"));
-            box-shadow: 0 0 1rem theme("colors.indigo.dark");
-            animation: growHorizontal 1.3s cubic-bezier(0.9, 0, 0.5, 0.9) 0.8s;
-        }
+  .emphasize {
+    position: relative;
+
+    &::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0.6rem;
+      width: 100%;
+      height: 0.36rem;
+      border-radius: 1rem;
+      background-image: linear-gradient(
+        90deg,
+        $brand 0%,
+        rgba(255, 255, 255, 0) 96%
+      );
+      box-shadow: 0 0 18px rgba(235, 116, 49, 0.55);
+      transform-origin: left center;
+      animation: underlineGrow 1.2s cubic-bezier(0.85, 0, 0.35, 1) 0.6s both,
+        underlineGlow 2.2s ease-in-out 1.6s infinite alternate;
     }
+  }
+}
+
+/* Spline wrapper: size + subtle mask so it blends into bg */
+.splineWrap {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: clamp(420px, 44vw, 760px);
+  height: 100%;
+  transform: translateZ(0);
+  will-change: transform;
+  /* fade edge on overlap with text */
+  mask-image: radial-gradient(120% 100% at 80% 50%, #000 60%, transparent 100%);
 }
 
 
+
+/* Keyframes */
 @keyframes fadeAppear {
   0% {
     opacity: 0;
   }
-
   50% {
     opacity: 0;
   }
-
   100% {
     opacity: 1;
   }
 }
 
-@keyframes growHorizontal {
-    from {
-      width: 0;
-    }
-    to {
-      width: 98%; 
-    }
+@keyframes underlineGrow {
+  from {
+    transform: scaleX(0);
   }
-
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes underlineGlow {
+  from {
+    box-shadow: 0 0 10px rgba(235, 116, 49, 0.35);
+  }
+  to {
+    box-shadow: 0 0 22px rgba(235, 116, 49, 0.65);
+  }
+}

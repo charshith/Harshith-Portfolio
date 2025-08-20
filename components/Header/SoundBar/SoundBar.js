@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import { Howl } from "howler";
+
 /** Order: Global Groove -> Focus Mode -> Ritmo Caliente */
 const TRACKS = [
   {
@@ -7,7 +7,7 @@ const TRACKS = [
     name: "Global Groove",
     label: "Global Groove 🌍",
     src: "/sounds/song2.mp3",
-    color: "#60a5fa",
+    color: "#60a5fa", // keeps per-track icon tint
   },
   {
     id: "lofi",
@@ -24,6 +24,8 @@ const TRACKS = [
     color: "#f87171",
   },
 ];
+
+const BRAND = "#EB7431"; // <- your brand orange
 
 export default function SoundBar() {
   const audioRef = useRef(null);
@@ -262,8 +264,9 @@ export default function SoundBar() {
           cursor: pointer;
           transition: transform 180ms ease, box-shadow 180ms ease,
             background 180ms ease;
-          box-shadow: 0 0 18px rgba(99, 102, 241, 0.55),
-            0 0 36px rgba(99, 102, 241, 0.35), 0 0 64px rgba(99, 102, 241, 0.22);
+          /* brand orange glow */
+          box-shadow: 0 0 18px rgba(235, 116, 49, 0.55),
+            0 0 36px rgba(235, 116, 49, 0.35), 0 0 64px rgba(235, 116, 49, 0.22);
         }
         .sb-btn::after {
           content: "";
@@ -272,8 +275,8 @@ export default function SoundBar() {
           border-radius: 999px;
           background: radial-gradient(
             circle at 50% 50%,
-            rgba(99, 102, 241, 0.22),
-            rgba(99, 102, 241, 0) 70%
+            rgba(235, 116, 49, 0.22),
+            rgba(235, 116, 49, 0) 70%
           );
           filter: blur(10px);
           z-index: -1;
@@ -286,8 +289,8 @@ export default function SoundBar() {
         .sb-btn:hover {
           transform: translateY(-1px) scale(1.03);
           background: rgba(0, 0, 0, 0.45);
-          box-shadow: 0 0 22px rgba(99, 102, 241, 0.7),
-            0 0 50px rgba(99, 102, 241, 0.45), 0 0 86px rgba(99, 102, 241, 0.3);
+          box-shadow: 0 0 22px rgba(235, 116, 49, 0.7),
+            0 0 50px rgba(235, 116, 49, 0.45), 0 0 86px rgba(235, 116, 49, 0.3);
         }
         .bars rect {
           fill: currentColor;
@@ -314,12 +317,14 @@ export default function SoundBar() {
           line-height: 1;
           cursor: pointer;
           transition: background 160ms ease, transform 160ms ease,
-            border-color 160ms ease;
+            border-color 160ms ease, color 160ms ease, box-shadow 160ms ease;
         }
         .label-pill:hover {
           background: rgba(0, 0, 0, 0.45);
           transform: translateY(-1px);
-          border-color: rgba(255, 255, 255, 0.26);
+          border-color: rgba(235, 116, 49, 0.45);
+          color: #ffe3d1;
+          box-shadow: 0 0 18px rgba(235, 116, 49, 0.35);
         }
 
         /* tooltip */
@@ -377,16 +382,17 @@ export default function SoundBar() {
           border: 1px solid transparent;
           cursor: pointer;
           transition: background 140ms ease, color 140ms ease,
-            border-color 140ms ease;
+            border-color 140ms ease, box-shadow 140ms ease;
         }
         .menu-item:hover {
-          background: rgba(99, 102, 241, 0.12);
-          color: #c7d2fe;
+          background: rgba(235, 116, 49, 0.12);
+          color: #ffe3d1;
+          box-shadow: inset 0 0 0 1px rgba(235, 116, 49, 0.25);
         }
         .menu-item.is-active {
-          background: rgba(99, 102, 241, 0.16);
-          color: #a5b4fc;
-          border-color: rgba(99, 102, 241, 0.25);
+          background: rgba(235, 116, 49, 0.16);
+          color: #ffd8c2;
+          border-color: rgba(235, 116, 49, 0.35);
         }
 
         /* animated left icon (mini equalizer) */
@@ -409,47 +415,24 @@ export default function SoundBar() {
           border-radius: 6px;
           background: radial-gradient(
             circle at 50% 50%,
-            var(--c, #a78bfa) 20%,
+            var(--c, ${BRAND}) 20%,
             transparent 60%
           );
           opacity: 0.18;
           filter: blur(10px);
         }
-        .iconBox span {
-          display: none;
-        } /* (no spans necessary; using pseudo + bars) */
         .iconBox::after {
           opacity: 0.1;
         }
 
-        /* three bars */
-        .iconBox::marker {
-          content: none;
-        }
-        .iconBox::before {
-          mix-blend-mode: screen;
-        }
-        .iconBox.on::before {
-          animation: none;
-        }
-
-        .iconBox::part(bar) {
-          display: none;
-        } /* for clarity */
-
-        .iconBox::after,
-        .iconBox.on::after {
-          content: "";
-        }
-
-        /* Draw bars with shadows via background */
+        /* equalizer bars (drawn via layered backgrounds) */
         .iconBox {
-          background: linear-gradient(var(--c, #a78bfa), var(--c, #a78bfa)) 6px
-              6px / 3px 10px no-repeat,
-            linear-gradient(var(--c, #a78bfa), var(--c, #a78bfa)) 10px 3px / 3px
-              16px no-repeat,
-            linear-gradient(var(--c, #a78bfa), var(--c, #a78bfa)) 14px 8px / 3px
-              8px no-repeat,
+          background: linear-gradient(var(--c, ${BRAND}), var(--c, ${BRAND}))
+              6px 6px / 3px 10px no-repeat,
+            linear-gradient(var(--c, ${BRAND}), var(--c, ${BRAND})) 10px 3px /
+              3px 16px no-repeat,
+            linear-gradient(var(--c, ${BRAND}), var(--c, ${BRAND})) 14px 8px /
+              3px 8px no-repeat,
             rgba(255, 255, 255, 0.04);
         }
         .iconBox.on {
@@ -462,17 +445,21 @@ export default function SoundBar() {
         @keyframes barsPulse {
           0%,
           100% {
-            background: linear-gradient(var(--c), var(--c)) 6px 8px / 3px 8px
-                no-repeat,
-              linear-gradient(var(--c), var(--c)) 10px 5px / 3px 14px no-repeat,
-              linear-gradient(var(--c), var(--c)) 14px 10px / 3px 6px no-repeat,
+            background: linear-gradient(var(--c, ${BRAND}), var(--c, ${BRAND}))
+                6px 8px / 3px 8px no-repeat,
+              linear-gradient(var(--c, ${BRAND}), var(--c, ${BRAND})) 10px 5px /
+                3px 14px no-repeat,
+              linear-gradient(var(--c, ${BRAND}), var(--c, ${BRAND})) 14px 10px /
+                3px 6px no-repeat,
               rgba(255, 255, 255, 0.04);
           }
           50% {
-            background: linear-gradient(var(--c), var(--c)) 6px 5px / 3px 14px
-                no-repeat,
-              linear-gradient(var(--c), var(--c)) 10px 8px / 3px 8px no-repeat,
-              linear-gradient(var(--c), var(--c)) 14px 6px / 3px 12px no-repeat,
+            background: linear-gradient(var(--c, ${BRAND}), var(--c, ${BRAND}))
+                6px 5px / 3px 14px no-repeat,
+              linear-gradient(var(--c, ${BRAND}), var(--c, ${BRAND})) 10px 8px /
+                3px 8px no-repeat,
+              linear-gradient(var(--c, ${BRAND}), var(--c, ${BRAND})) 14px 6px /
+                3px 12px no-repeat,
               rgba(255, 255, 255, 0.04);
           }
         }

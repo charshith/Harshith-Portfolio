@@ -4,6 +4,8 @@ import Image from "next/image";
 import SoundBar from "./SoundBar/SoundBar";
 import { MENULINKS } from "../../constants";
 
+const BRAND = "#EB7431";
+
 const Header = ({ children }) => {
   const [active, setActive] = useState("home");
   const [hovering, setHovering] = useState(false);
@@ -116,7 +118,7 @@ const Header = ({ children }) => {
           </nav>
         </div>
 
-        {/* RIGHT — SoundBar (force visible & on top) */}
+        {/* RIGHT — SoundBar */}
         <div className="flex items-center gap-4 z-10">
           <div className="soundbar-wrap">
             <SoundBar />
@@ -125,7 +127,7 @@ const Header = ({ children }) => {
         </div>
       </div>
 
-      {/* Colors + single-pill behavior + SoundBar visibility fixes */}
+      {/* Brand color + single-pill behavior + SoundBar visibility fixes */}
       <style jsx global>{`
         /* --- nav pills --- */
         .primary-nav .pill {
@@ -135,30 +137,33 @@ const Header = ({ children }) => {
           white-space: nowrap;
           display: inline-flex;
           align-items: center;
-          justify-content: center; /* center label horizontally */
-          line-height: 1; /* vertical centering with leading-none */
-          transition: color 160ms ease, transform 220ms ease, opacity 220ms ease;
+          justify-content: center;
+          line-height: 1;
+          transition: color 160ms ease, transform 220ms ease, opacity 220ms ease,
+            text-shadow 160ms ease;
         }
         .primary-nav .pill:hover,
         .primary-nav .pill:focus {
-          color: #3b82f6 !important;
+          color: ${BRAND} !important;
+          text-shadow: 0 0 14px rgba(235, 116, 49, 0.35);
         }
         .primary-nav .pill.is-active {
-          color: #3b82f6 !important;
+          color: ${BRAND} !important;
+          text-shadow: 0 0 14px rgba(235, 116, 49, 0.35);
         }
         .primary-nav .pill:visited {
           color: #e5e7eb;
         }
         .primary-nav .pill.is-active:visited {
-          color: #3b82f6 !important;
+          color: ${BRAND} !important;
         }
 
         /* --- single-pill (centered) --- */
         .primary-nav.is-mini {
           gap: 0;
           padding: 0.25rem 0.5rem;
-          justify-content: center; /* center the lone pill */
-          min-height: 40px; /* stable height */
+          justify-content: center;
+          min-height: 40px;
         }
         .primary-nav.is-mini .pill.is-active {
           transform: scale(1.02);
@@ -166,7 +171,7 @@ const Header = ({ children }) => {
           padding-right: 0.9rem;
         }
 
-        /* --- SoundBar visibility overrides (without editing SoundBar.js) --- */
+        /* --- SoundBar container (no change to component) --- */
         .soundbar-wrap {
           position: relative;
           z-index: 10;
@@ -175,64 +180,6 @@ const Header = ({ children }) => {
           justify-content: center;
           min-width: 28px;
           min-height: 20px;
-        }
-        /* Make sure the internal .soundBars node is visible and clickable */
-        .soundbar-wrap .soundBars {
-          position: static !important;
-          display: inline-flex;
-          gap: 3px;
-          align-items: flex-end;
-          cursor: pointer;
-          opacity: 1 !important;
-          pointer-events: auto !important;
-        }
-        .soundbar-wrap .soundBars span {
-          display: block;
-          width: 3px;
-          height: 12px;
-          background: #e5e7eb;
-          border-radius: 1px;
-        }
-        /* If your SoundBar toggles a 'play' class, you can animate bars: */
-        .soundbar-wrap .soundBars.play span:nth-child(1) {
-          animation: sb1 0.6s infinite ease-in-out;
-        }
-        .soundbar-wrap .soundBars.play span:nth-child(2) {
-          animation: sb2 0.6s infinite ease-in-out;
-        }
-        .soundbar-wrap .soundBars.play span:nth-child(3) {
-          animation: sb3 0.6s infinite ease-in-out;
-        }
-        .soundbar-wrap .soundBars.play span:nth-child(4) {
-          animation: sb2 0.6s infinite ease-in-out;
-        }
-
-        @keyframes sb1 {
-          0%,
-          100% {
-            height: 5px;
-          }
-          50% {
-            height: 14px;
-          }
-        }
-        @keyframes sb2 {
-          0%,
-          100% {
-            height: 12px;
-          }
-          50% {
-            height: 6px;
-          }
-        }
-        @keyframes sb3 {
-          0%,
-          100% {
-            height: 8px;
-          }
-          50% {
-            height: 16px;
-          }
         }
       `}</style>
     </nav>

@@ -12,12 +12,12 @@
   border-radius: 0.4rem;
   color: #fff;
   background-size: 220%;
-  outline: 2px solid theme("colors.indigo.dark");
+  outline: 2px solid #eb7431;
   background-image: linear-gradient(
     120deg,
     transparent 0%,
     transparent 50%,
-    theme("colors.purple") 50%
+    #eb7431 50%
   );
   transition: all 0.3s ease-in-out;
 
@@ -25,29 +25,9 @@
   &:active {
     background-position: 100%;
     color: #fff;
-    box-shadow: 0 0 1rem theme("colors.indigo.dark");
+    box-shadow: 0 0 1rem #eb7431;
   }
 }
-
-// .primary__button[disabled] {
-//   pointer-events: none;
-//   background-position: 120%;
-//   box-shadow: 0 0 0rem theme("colors.indigo.dark");
-
-//   color: inherit;
-
-//   background-image: linear-gradient(
-//     120deg,
-//     transparent 33%,
-//     theme("colors.purple") 33%,
-//     theme("colors.purple")66%,
-//     transparent 66%
-//   );
-
-//   animation-name: load;
-//   animation-duration: 1s;
-//   animation-iteration-count: infinite;
-// }
 
 .secondary__button {
   position: relative;
@@ -68,7 +48,7 @@
     120deg,
     transparent 0%,
     transparent 50%,
-    theme("colors.purple") 50%
+    #eb7431 50%
   );
   transition: all 0.3s ease-in-out;
 
@@ -76,6 +56,6 @@
   &:active {
     background-position: 100%;
     color: #fff;
-    box-shadow: 0 0 1rem theme("colors.gray.dark.5");
+    box-shadow: 0 0 1rem #eb7431;
   }
 }

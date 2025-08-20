@@ -9,8 +9,10 @@
   "dependencies": {
     "@emailjs/browser": "^4.3.3",
     "@next/third-parties": "^14.2.13",
-    "@react-three/drei": "^10.7.3",
-    "@react-three/fiber": "^9.3.0",
+    "@react-three/drei": "9.88.13",
+    "@react-three/fiber": "8.15.18",
+    "@splinetool/react-spline": "^4.1.0",
+    "@splinetool/runtime": "^1.10.48",
     "bad-words": "^3.0.4",
     "clsx": "^2.1.1",
     "framer-motion": "^11.1.9",
@@ -24,7 +26,7 @@
     "react-reveal": "^1.2.2",
     "sass": "^1.77.1",
     "tailwind-merge": "^2.3.0",
-    "three": "^0.179.1",
+    "three": "0.160.0",
     "typed.js": "^2.1.0",
     "url-loader": "^4.1.1",
     "vanilla-tilt": "^1.8.1"

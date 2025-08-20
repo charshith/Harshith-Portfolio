@@ -1,46 +1,53 @@
-.top {
-  padding: 120px 0px 270px;
+/* components/Footer/FooterBg/FooterBg.module.scss */
+
+.bgWrap {
+  height: clamp(360px, 48vw, 560px);
+  background: radial-gradient(80% 120% at 100% 50%, #0b0b12 0%, #000 60%);
   position: relative;
-  overflow-x: hidden;
-
-  .background {
-    position: absolute;
-    bottom: 0;
-    background: url("/footer/background.png") no-repeat scroll center 0;
-    width: 100%;
-    height: 266px;
-  }
-
-  .background__one {
-    background: url("/footer/volkswagen.gif") no-repeat center center;
-    width: 330px;
-    height: 105px;
-    background-size: 100%;
-    position: absolute;
-    bottom: 0;
-    left: 30%;
-    -webkit-animation: first 22s linear infinite;
-    animation: first 22s linear infinite;
-  }
-
-  .background__two {
-    background: url("/footer/cyclist.gif") no-repeat center center;
-    width: 88px;
-    height: 100px;
-    background-size: 100%;
-    bottom: 0;
-    left: 38%;
-    position: absolute;
-    -webkit-animation: first 30s linear infinite;
-    animation: first 30s linear infinite;
-  }
 }
 
-@keyframes first {
-  0% {
-    left: -25%;
-  }
-  100% {
-    left: 100%;
-  }
+/* The Spline canvas */
+.splineCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Hide Spline watermark reliably (class + test id fallbacks) */
+.splineCanvas :global(.spline-watermark),
+.splineCanvas :global([data-testid="watermark"]),
+.splineCanvas :global([class*="watermark"]) {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+}
+
+/* Placeholder while not in view */
+.placeholder {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    40% 60% at 70% 40%,
+    rgba(99, 102, 241, 0.2),
+    rgba(0, 0, 0, 0)
+  );
+}
+
+/* Soft vignette to help foreground text contrast */
+.vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+      120% 120% at 50% 100%,
+      rgba(0, 0, 0, 0.55) 0%,
+      rgba(0, 0, 0, 0) 45%
+    ),
+    radial-gradient(
+      100% 100% at 0% 0%,
+      rgba(31, 41, 55, 0.25) 0%,
+      rgba(0, 0, 0, 0) 60%
+    );
 }
