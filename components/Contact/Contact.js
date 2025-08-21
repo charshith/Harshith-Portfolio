@@ -8,6 +8,11 @@ import mail from "./mailer";
 import styles from "./Contact.module.scss";
 import { MENULINKS } from "../../constants";
 
+// Register GSAP plugin only in the browser (avoids SSR/hydration issues)
+if (typeof window !== "undefined" && !gsap.core.globals().ScrollTrigger) {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
 const filter = new Filter();
 filter.removeWords("hell", "god", "shit");
 
@@ -21,25 +26,17 @@ const toastOptions = {
 };
 
 const empty = () =>
-  toast.error("Please fill the required fields", {
-    id: "error",
-  });
-
-const error = () =>
-  toast.error("Error sending your message", {
-    id: "error",
-  });
-
+  toast.error("Please fill the required fields", { id: "error" });
+const error = () => toast.error("Error sending your message", { id: "error" });
 const success = () =>
-  toast.success("Message sent successfully", {
-    id: "success",
-  });
+  toast.success("Message sent successfully", { id: "success" });
 
 const Contact = () => {
   const initialState = { name: "", email: "", message: "" };
   const [formData, setFormData] = useState(initialState);
   const [mailerResponse, setMailerResponse] = useState("not initiated");
   const [isSending, setIsSending] = useState(false);
+
   const buttonElementRef = useRef(null);
   const sectionRef = useRef(null);
 
@@ -58,9 +55,7 @@ const Contact = () => {
     });
   };
 
-  const emptyForm = () => {
-    setFormData(initialState);
-  };
+  const emptyForm = () => setFormData(initialState);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -92,161 +87,161 @@ const Contact = () => {
       });
   };
 
+  // Reset toast state safely
   useEffect(() => {
-    setTimeout(() => {
-      setMailerResponse("not initiated");
-    }, 10000);
+    const t = setTimeout(() => setMailerResponse("not initiated"), 10000);
+    return () => clearTimeout(t);
   }, [mailerResponse]);
 
+  // Button plane animation — guard ref + cleanup to prevent crashes
   useEffect(() => {
-    buttonElementRef.current.addEventListener("click", (e) => {
-      if (!buttonElementRef.current.classList.contains("active")) {
-        buttonElementRef.current.classList.add("active");
+    const btn = buttonElementRef.current;
+    if (!btn) return;
 
-        gsap.to(buttonElementRef.current, {
-          keyframes: [
-            {
-              "--left-wing-first-x": 50,
-              "--left-wing-first-y": 100,
-              "--right-wing-second-x": 50,
-              "--right-wing-second-y": 100,
-              duration: 0.2,
-              onComplete() {
-                gsap.set(buttonElementRef.current, {
-                  "--left-wing-first-y": 0,
-                  "--left-wing-second-x": 40,
-                  "--left-wing-second-y": 100,
-                  "--left-wing-third-x": 0,
-                  "--left-wing-third-y": 100,
-                  "--left-body-third-x": 40,
-                  "--right-wing-first-x": 50,
-                  "--right-wing-first-y": 0,
-                  "--right-wing-second-x": 60,
-                  "--right-wing-second-y": 100,
-                  "--right-wing-third-x": 100,
-                  "--right-wing-third-y": 100,
-                  "--right-body-third-x": 60,
-                });
-              },
+    const onClick = () => {
+      if (btn.classList.contains("active")) return;
+      btn.classList.add("active");
+
+      gsap.to(btn, {
+        keyframes: [
+          {
+            "--left-wing-first-x": 50,
+            "--left-wing-first-y": 100,
+            "--right-wing-second-x": 50,
+            "--right-wing-second-y": 100,
+            duration: 0.2,
+            onComplete() {
+              gsap.set(btn, {
+                "--left-wing-first-y": 0,
+                "--left-wing-second-x": 40,
+                "--left-wing-second-y": 100,
+                "--left-wing-third-x": 0,
+                "--left-wing-third-y": 100,
+                "--left-body-third-x": 40,
+                "--right-wing-first-x": 50,
+                "--right-wing-first-y": 0,
+                "--right-wing-second-x": 60,
+                "--right-wing-second-y": 100,
+                "--right-wing-third-x": 100,
+                "--right-wing-third-y": 100,
+                "--right-body-third-x": 60,
+              });
             },
-            {
-              "--left-wing-third-x": 20,
-              "--left-wing-third-y": 90,
-              "--left-wing-second-y": 90,
-              "--left-body-third-y": 90,
-              "--right-wing-third-x": 80,
-              "--right-wing-third-y": 90,
-              "--right-body-third-y": 90,
-              "--right-wing-second-y": 90,
-              duration: 0.2,
-            },
-            {
-              "--rotate": 50,
-              "--left-wing-third-y": 95,
-              "--left-wing-third-x": 27,
-              "--right-body-third-x": 45,
-              "--right-wing-second-x": 45,
-              "--right-wing-third-x": 60,
-              "--right-wing-third-y": 83,
-              duration: 0.25,
-            },
-            {
-              "--rotate": 60,
-              "--plane-x": -8,
-              "--plane-y": 40,
-              duration: 0.2,
-            },
-            {
-              "--rotate": 40,
-              "--plane-x": 45,
-              "--plane-y": -300,
-              "--plane-opacity": 0,
-              duration: 0.375,
-              onComplete() {
-                setTimeout(() => {
-                  buttonElementRef.current.removeAttribute("style");
-                  gsap.fromTo(
-                    buttonElementRef.current,
-                    {
-                      opacity: 0,
-                      y: -8,
+          },
+          {
+            "--left-wing-third-x": 20,
+            "--left-wing-third-y": 90,
+            "--left-wing-second-y": 90,
+            "--left-body-third-y": 90,
+            "--right-wing-third-x": 80,
+            "--right-wing-third-y": 90,
+            "--right-body-third-y": 90,
+            "--right-wing-second-y": 90,
+            duration: 0.2,
+          },
+          {
+            "--rotate": 50,
+            "--left-wing-third-y": 95,
+            "--left-wing-third-x": 27,
+            "--right-body-third-x": 45,
+            "--right-wing-second-x": 45,
+            "--right-wing-third-x": 60,
+            "--right-wing-third-y": 83,
+            duration: 0.25,
+          },
+          { "--rotate": 60, "--plane-x": -8, "--plane-y": 40, duration: 0.2 },
+          {
+            "--rotate": 40,
+            "--plane-x": 45,
+            "--plane-y": -300,
+            "--plane-opacity": 0,
+            duration: 0.375,
+            onComplete() {
+              setTimeout(() => {
+                btn.removeAttribute("style");
+                gsap.fromTo(
+                  btn,
+                  { opacity: 0, y: -8 },
+                  {
+                    opacity: 1,
+                    y: 0,
+                    clearProps: true,
+                    duration: 0.3,
+                    onComplete() {
+                      btn.classList.remove("active");
                     },
-                    {
-                      opacity: 1,
-                      y: 0,
-                      clearProps: true,
-                      duration: 0.3,
-                      onComplete() {
-                        buttonElementRef.current.classList.remove("active");
-                      },
-                    }
-                  );
-                }, 1800);
-              },
+                  }
+                );
+              }, 1800);
             },
-          ],
-        });
+          },
+        ],
+      });
 
-        gsap.to(buttonElementRef.current, {
-          keyframes: [
-            {
-              "--text-opacity": 0,
-              "--border-radius": 0,
-              "--left-wing-background": "#EB7431",
-              "--right-wing-background": "#EB7431",
-              duration: 0.11,
-            },
-            {
-              "--left-wing-background": "#d26329",
-              "--right-wing-background": "#d26329",
-              duration: 0.14,
-            },
-            {
-              "--left-body-background": "#EB7431",
-              "--right-body-background": "#EB7431",
-              duration: 0.25,
-              delay: 0.1,
-            },
-            {
-              "--trails-stroke": 171,
-              duration: 0.22,
-              delay: 0.22,
-            },
-            {
-              "--success-opacity": 1,
-              "--success-x": 0,
-              duration: 0.2,
-              delay: 0.15,
-            },
-            {
-              "--success-stroke": 0,
-              duration: 0.15,
-            },
-          ],
-        });
-      }
-    });
-  }, [buttonElementRef]);
+      gsap.to(btn, {
+        keyframes: [
+          {
+            "--text-opacity": 0,
+            "--border-radius": 0,
+            "--left-wing-background": "#EB7431",
+            "--right-wing-background": "#EB7431",
+            duration: 0.11,
+          },
+          {
+            "--left-wing-background": "#d26329",
+            "--right-wing-background": "#d26329",
+            duration: 0.14,
+          },
+          {
+            "--left-body-background": "#EB7431",
+            "--right-body-background": "#EB7431",
+            duration: 0.25,
+            delay: 0.1,
+          },
+          { "--trails-stroke": 171, duration: 0.22, delay: 0.22 },
+          {
+            "--success-opacity": 1,
+            "--success-x": 0,
+            duration: 0.2,
+            delay: 0.15,
+          },
+          { "--success-stroke": 0, duration: 0.15 },
+        ],
+      });
+    };
 
+    btn.addEventListener("click", onClick);
+    return () => btn.removeEventListener("click", onClick);
+  }, []);
+
+  // Section stagger reveal — guard refs + cleanup to avoid leaks
   useEffect(() => {
+    const section = sectionRef.current;
+    if (!section || !ScrollTrigger) return;
+
     const tl = gsap.timeline({ defaults: { ease: "none" } });
+    tl.from(section.querySelectorAll(".staggered-reveal"), {
+      opacity: 0,
+      duration: 0.5,
+      stagger: 0.5,
+    });
 
-    tl.from(
-      sectionRef.current.querySelectorAll(".staggered-reveal"),
-      { opacity: 0, duration: 0.5, stagger: 0.5 },
-      "<"
-    );
-
-    ScrollTrigger.create({
-      trigger: sectionRef.current.querySelector(".contact-wrapper"),
+    const trigger = ScrollTrigger.create({
+      trigger: section.querySelector(".contact-wrapper"),
       start: "100px bottom",
       end: "center center",
       scrub: 0,
       animation: tl,
     });
 
-    return () => tl.kill();
-  }, [sectionRef]);
+    // Ensure layout is measured after paint
+    requestAnimationFrame(() => ScrollTrigger.refresh());
+
+    return () => {
+      tl.kill();
+      trigger.kill();
+    };
+  }, []);
 
   return (
     <section
@@ -257,24 +252,17 @@ const Contact = () => {
       <div>
         <Toaster toastOptions={toastOptions} />
       </div>
+
       <div className="section-container flex flex-col justify-center">
         <div className="flex flex-col contact-wrapper">
           <div className="flex flex-col">
-            <h1
-              className="text-6xl mt-2 font-medium w-fit staggered-reveal"
-              style={{
-                background: "linear-gradient(90deg, #eb7431, #d26329, #eb7431)",
-                backgroundSize: "300% 300%",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                animation: "gradientMove 4s ease-in-out infinite",
-              }}
-            >
+            {/* Simple brand color (no animation) */}
+            <h1 className="text-6xl mt-2 font-medium w-fit staggered-reveal text-[#EB7431]">
               Contact
             </h1>
           </div>
           <h2 className="text-[1.65rem] font-medium md:max-w-lg w-full mt-2 staggered-reveal">
-            Get In Touch.{" "}
+            Get In Touch.
           </h2>
         </div>
 
@@ -338,17 +326,12 @@ const Contact = () => {
               <div className="hidden">{error()}</div>
             ))}
         </form>
+
         <div className="mt-9 mx-auto link">
           <button
             ref={buttonElementRef}
             className={styles.button}
-            disabled={
-              formData.name === "" ||
-              formData.email === "" ||
-              formData.message === ""
-                ? true
-                : false
-            }
+            disabled={!formData.name || !formData.email || !formData.message}
             onClick={handleSubmit}
           >
             <span>Send -&gt;</span>
@@ -369,6 +352,7 @@ const Contact = () => {
           </button>
         </div>
       </div>
+
       <style jsx global>{`
         input,
         label,
