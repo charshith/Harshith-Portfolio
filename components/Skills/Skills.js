@@ -4,18 +4,20 @@ import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { MENULINKS, SKILLS } from "../../constants";
-import SkillIcon from "./SkillIcon"; // ✅ use CDN+fallback-aware icon
+import SkillIcon from "./SkillIcon";
 
 const Skills = () => {
   const sectionRef = useRef(null);
 
   useLayoutEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
     const ctx = gsap.context(() => {
       const tl = gsap
         .timeline({ defaults: { ease: "none" } })
         .from(
           sectionRef.current.querySelectorAll(".staggered-reveal"),
-          { opacity: 0, duration: 0.5, stagger: 0.5 },
+          { opacity: 0, y: 6, duration: 0.5, stagger: 0.35 },
           "<"
         );
 
@@ -26,7 +28,7 @@ const Skills = () => {
         scrub: 0,
         animation: tl,
       });
-    });
+    }, sectionRef);
 
     return () => ctx.revert();
   }, []);
@@ -37,32 +39,45 @@ const Skills = () => {
       id={MENULINKS[1].ref}
       className="w-full relative select-none mt-44"
     >
-      <div className="section-container py-16 flex flex-col justify-center">
+      {/* subtle backdrop */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(60% 40% at 20% 30%, rgba(235,116,49,0.08), transparent 70%), radial-gradient(70% 60% at 80% 70%, rgba(0,0,0,0.45), transparent 70%)",
+        }}
+      />
+
+      <div className="section-container py-16 flex flex-col justify-center relative">
         <img
           src="/right-pattern.svg"
           alt=""
-          className="absolute hidden right-0 bottom-2/4 w-2/12 max-w-xs md:block"
+          className="absolute hidden right-0 bottom-2/4 w-2/12 max-w-xs md:block opacity-60"
           loading="lazy"
           height={700}
           width={320}
         />
+
         <div className="flex flex-col skills-wrapper">
           <div className="flex flex-col">
             <p className="uppercase tracking-widest text-gray-light-1 staggered-reveal">
               SKILLS
             </p>
-            <h1 className="text-6xl mt-2 font-medium text-gradient w-fit staggered-reveal">
+            <h1 className="text-6xl mt-2 font-medium text-[#eb7431] w-fit staggered-reveal">
               My Skills
             </h1>
-            <h2 className="text-[1.65rem] font-medium md:max-w-lg w-full mt-2 staggered-reveal">
-              Full-Stack & Data Engineer—building AI-driven SaaS, GraphQL
-              microservices, and real-time analytics with React, Python, and AWS.
+            <h2 className="text-[1.55rem] md:text-[1.65rem] font-medium md:max-w-2xl w-full mt-2 text-white/90 staggered-reveal">
+              Expertise in building scalable platforms, crafting intuitive user
+              experiences, and delivering actionable analytics to drive growth
+              and efficiency.
             </h2>
           </div>
 
+          {/* LANGUAGES & TOOLS */}
           <div className="mt-10">
             <h3 className="uppercase tracking-widest text-gray-light-2 font-medium text-base mb-4 staggered-reveal">
-              LANGUAGES AND TOOLS
+              LANGUAGES & TOOLS
             </h3>
             <div className="flex items-center flex-wrap gap-6 staggered-reveal">
               {SKILLS.languagesAndTools.map((skill) => (
@@ -71,9 +86,10 @@ const Skills = () => {
             </div>
           </div>
 
+          {/* LIBRARIES & FRAMEWORKS */}
           <div className="mt-10">
             <h3 className="uppercase tracking-widest text-gray-light-2 font-medium text-base mb-4 staggered-reveal">
-              LIBRARIES AND FRAMEWORKS
+              LIBRARIES & FRAMEWORKS
             </h3>
             <div className="flex flex-wrap gap-6 transform-gpu staggered-reveal">
               {SKILLS.librariesAndFrameworks.map((skill) => (
@@ -82,6 +98,7 @@ const Skills = () => {
             </div>
           </div>
 
+          {/* DATABASES + DEVOPS */}
           <div className="flex flex-wrap mt-10">
             <div className="mr-16 xs:mr-20 mb-6 staggered-reveal">
               <h3 className="uppercase tracking-widest text-gray-light-2 font-medium text-base mb-4">
@@ -96,7 +113,7 @@ const Skills = () => {
 
             <div className="staggered-reveal">
               <h3 className="uppercase tracking-widest text-gray-light-2 font-medium text-base mb-4">
-                DevOps & Tools
+                DEVOPS & TOOLS
               </h3>
               <div className="flex flex-wrap gap-6 transform-gpu">
                 {SKILLS.other.map((skill) => (

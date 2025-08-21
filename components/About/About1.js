@@ -15,46 +15,41 @@ const About1 = ({ clientHeight }) => {
       const line2 = quoteRef.current.querySelector(".about-2");
       const glow = quoteRef.current.querySelector(".about-glow");
 
-      // Initial state: L1 emphasized, L2 de-emphasized (but visible)
+      // Initial states
       gsap.set(line1, { opacity: 1, y: 0 });
       gsap.set(line2, { opacity: 0.45, y: 0 });
       gsap.set(glow, { opacity: 0, scale: 0.96, filter: "blur(10px)" });
 
-      // Small entrance touch (runs once, not scrubbed)
+      // One-time soft entrance
       gsap
         .timeline({ defaults: { ease: "power2.out" } })
         .to(glow, {
-          opacity: 0.4,
+          opacity: 0.28,
           scale: 1,
-          filter: "blur(14px)",
-          duration: 0.5,
+          filter: "blur(12px)",
+          duration: 0.45,
         })
-        .to(glow, { opacity: 0, duration: 0.5 });
+        .to(glow, { opacity: 0, duration: 0.4 });
 
-      // Crossfade emphasis as you scroll through the block
-      const tl = gsap.timeline({
-        defaults: { ease: "none" },
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "center 80%", // when center of section hits 80% of viewport
-          end: "center 20%", // to 20% of viewport
-          scrub: 0.4, // smooth
-          onEnter: () => gsap.set([line1, line2], { clearProps: "willChange" }),
-          onLeave: () => {}, // keep final emphasis
-          onEnterBack: () => {}, // restore start emphasis on reverse
-          onLeaveBack: () => {}, // keep start emphasis
-        },
-      });
-
-      // Map progress 0 → 1: L1 1→0.45, L2 0.45→1
-      tl.to(line1, { opacity: 0.45 }, 0).to(line2, { opacity: 1 }, 0);
+      // Crossfade emphasis while scrolling this section
+      gsap
+        .timeline({
+          defaults: { ease: "none" },
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "center 80%",
+            end: "center 20%",
+            scrub: 0.4,
+          },
+        })
+        .to(line1, { opacity: 0.45 }, 0)
+        .to(line2, { opacity: 1 }, 0);
     }, sectionRef);
 
     return () => ctx.revert();
   }, []);
 
   const scrollToNext = () => {
-    // Change "#skills" if your next section has a different id
     document
       .querySelector("#skills")
       ?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -75,24 +70,37 @@ const About1 = ({ clientHeight }) => {
           <span className="about-1 leading-tight relative inline-block">
             <span className="about-glow" aria-hidden="true" />
             I&apos;m a{" "}
-            <span className="role-gradient font-semibold">
+            <span
+              className="role-gradient role-interactive font-semibold"
+              aria-label="Full Stack Developer"
+              title="Full Stack Developer"
+            >
               Full Stack Developer
             </span>{" "}
-            passionate about designing scalable software and intuitive user
-            experiences across web and cloud platforms.
+            crafting scalable microservices and seamless web &amp; apps.
           </span>
 
           {/* LINE 2 */}
           <span className="about-2 leading-tight block mt-6 text-gray-300">
-            Driven to build AI-enabled, data-driven applications that improve
-            decision-making and efficiency.
+            Turning data into AI-powered, real-time products that drive
+            decisions.
           </span>
         </h1>
+
+        {/* Optional scroll indicator — uncomment to use */}
+        {/*
+        <button
+          className="scroll-indicator"
+          onClick={scrollToNext}
+          aria-label="Scroll to skills"
+        >
+          <span className="scroll-dot" />
+        </button>
+        */}
       </div>
 
-
-      {/* Local styles */}
       <style jsx>{`
+        /* --- Highlighted role text (clean gradient + shine + underline) --- */
         .role-gradient {
           background: linear-gradient(
             90deg,
@@ -100,11 +108,25 @@ const About1 = ({ clientHeight }) => {
             #ffa368 50%,
             #ffd5b3 100%
           );
+          background-size: 200% 100%;
+          background-position: 0% 0%;
           -webkit-background-clip: text;
           background-clip: text;
           color: transparent;
-          text-shadow: 0 0 16px rgba(235, 116, 49, 0.18);
+          position: relative;
+          transition: background-position 520ms ease, transform 260ms ease,
+            letter-spacing 260ms ease;
         }
+
+
+        /* Subtle “shine” sweep using background-position + light lift */
+        .role-interactive:hover,
+        .role-interactive:focus-visible {
+          background-position: 120% 0%;
+          transform: translateY(-1px);
+          letter-spacing: 0.3px;
+        }
+
 
         .about-1 {
           position: relative;
@@ -115,21 +137,21 @@ const About1 = ({ clientHeight }) => {
           border-radius: 24px;
           background: radial-gradient(
               40% 70% at 20% 60%,
-              rgba(235, 116, 49, 0.28),
+              rgba(235, 116, 49, 0.2),
               transparent 70%
             ),
             radial-gradient(
               60% 90% at 60% 40%,
-              rgba(235, 116, 49, 0.18),
+              rgba(235, 116, 49, 0.12),
               transparent 75%
             );
-          filter: blur(14px);
+          filter: blur(12px);
           opacity: 0;
           pointer-events: none;
           z-index: -1;
         }
 
-        /* Scroll indicator */
+        /* Optional scroll indicator */
         .scroll-indicator {
           position: absolute;
           left: 50%;
@@ -172,7 +194,6 @@ const About1 = ({ clientHeight }) => {
             opacity: 0.35;
           }
         }
-
         @media (prefers-reduced-motion: reduce) {
           .scroll-dot {
             animation: none;

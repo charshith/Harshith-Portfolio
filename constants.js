@@ -64,9 +64,8 @@ export const SOCIAL_LINKS = [
   { name: "twitter", url: "https://x.com/yourhandle" },
 ];
 
-// -----------------------------
-// SKILLS
-// -----------------------------
+// SKILLS — aligned with resumes
+
 export const SKILLS = {
   languagesAndTools: [
     "javascript",
@@ -74,46 +73,46 @@ export const SKILLS = {
     "python",
     "java",
     "sql",
-    "nodejs",
-    "vite",
-    "figma",
+    "html5",
+    "css3",
+    "git",
   ],
+
   librariesAndFrameworks: [
     "react",
-    "nextjs",
+    "angular",
     "tailwindcss",
-    "graphql",
+    "bootstrap",
+    "nodejs",
+    "express",
     "django",
     "flask",
-    "nest",      // not "nestjs"
-    "angular",
+    "graphql",
+    "swagger",
+    "postman",
   ],
-  databases: [
-    "postgres",  // not "postgr"/"postgresql" (aliases supported, but use this)
-    "snowflake", // not "snowfl"
-    "mysql",
-    "mongodb",
-  ],
+
+  databases: ["postgresql", "mysql", "mongodb", "sqlite", "snowflake"],
+
   other: [
-    "git",
     "docker",
     "aws",
+    "gcp",
+    "jenkins",
+    "nginx",
+    "linux",
+    "heroku",
+    "netlify",
     "kafka",
-    "cicd",      // "ci-cd" also works, but use this
+    "githubactions",
+    "cicd",
+    "jest",
+    "cypress",
+    "pytest",
   ],
 };
 
 export const PROJECTS = [
-  // {
-  //   name: "React Native Directory",
-  //   image: "/projects/react-native-directory.webp",
-  //   blurImage: "/projects/blur/react-native-directory.webp",
-  //   description:
-  //     "Quickly search and filter React Native libraries from Raycast 🔌",
-  //   gradient: ["#F14658", "#DC2537"],
-  //   url: "https://www.raycast.com/shubh_porwal/react-native-directory",
-  //   tech: ["typescript", "react", "raycast"],
-  // },
   {
     name: "Airbnb",
     image: "/projects/airbnb.webp",
@@ -141,15 +140,6 @@ export const PROJECTS = [
     gradient: ["#000066", "#6699FF"],
     url: "https://shubh73-inshorts.netlify.app/",
     tech: ["react", "chakra-ui", "alan"],
-  },
-  {
-    name: "Tesla",
-    image: "/projects/tesla.webp",
-    blurImage: "/projects/blur/tesla-blur.webp",
-    description: "A Tesla React Native App 🏎️",
-    gradient: ["#142D46", "#2E4964"],
-    url: "https://github.com/shubh73/tesla",
-    tech: ["react"],
   },
 ];
 
