@@ -61,9 +61,6 @@ const Skills = () => {
 
         <div className="flex flex-col skills-wrapper">
           <div className="flex flex-col">
-            <p className="uppercase tracking-widest text-gray-light-1 staggered-reveal">
-              SKILLS
-            </p>
             <h1 className="text-6xl mt-2 font-medium text-[#eb7431] w-fit staggered-reveal">
               My Skills
             </h1>
