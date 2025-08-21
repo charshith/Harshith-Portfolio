@@ -1,7 +1,7 @@
-# devfolio
+# Harshith Portfolio
 
-<a href="https://shubhporwal.me">
-  <img alt="devfolio" src="./public/preview.png" />
+<a href="https://harshithcharugulla.vercel.app">
+  <img alt="Portfolio Preview" src="./public/preview.png" />
 </a>
 
 <p>
@@ -9,34 +9,58 @@
   <a href="#" target="_blank">
     <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
   </a>
-  <img src="https://img.shields.io/static/v1?label=%F0%9F%8C%9F&message=If%20Useful&style=style=flat&color=BC4E99" alt="Star Badge"/>
+  <img src="https://img.shields.io/static/v1?label=%F0%9F%8C%9F&message=If%20Useful&style=flat&color=BC4E99" alt="Star Badge"/>
 </p>
 
-👨‍🎓 An eye-catching developer Portfolio, Built on NextJS, GSAP, Tailwind and React
+🚀 A modern and eye-catching developer portfolio built with **Next.js, Tailwind CSS, GSAP, and React**.  
+It showcases my experience as a **Full Stack Developer** with expertise in AI-driven SaaS, microservices, and real-time analytics.
 
-### ✨ [Live Demo](http://www.shubhporwal.me/)
+### ✨ [Live Demo](https://harshithcharugulla.vercel.app)
 
-## Getting Started
+---
+
+## 🛠 Getting Started
 
 In the project directory, you can run:
 
 #### `yarn install`
 
+Installs all the dependencies.
+
 #### `yarn dev`
 
-Runs the app in the development mode.\
-Open [`http://localhost:3000`](http://localhost:3000) to view it in the browser.
+Runs the app in the development mode.  
+Open [`http://localhost:3000`](http://localhost:3000) to view it in your browser.
 
-## Design
+---
 
-You can always draw inspiration from the design, and no, you don't have to give me credits for that.
+## 🎨 Design
 
-## Forking
+This portfolio is designed with a **clean, dark-modern aesthetic** inspired by interactive portfolios.  
+You can always draw inspiration from the design and customize it with your own content.
 
-When people ask me whether they may use the code for their own website, I typically say yes as long as they provide proper attribution.
+---
 
-Every time I learn that someone has duplicated my website without giving me credit, it saddens me. This version of my website took a significant amount of work to construct, and I'm pleased of it! All I ask is that you empathize with my situation and leave the footer unaltered.
+## 📂 Features
 
-## Star History
+- ⚡ Built with **Next.js** for performance and SEO.  
+- 🎬 Smooth animations powered by **GSAP** and **Framer Motion**.  
+- 🎨 Styled with **Tailwind CSS** for modern responsive UI.  
+- 🖼 Hero section with glitch/typing effects & 3D background blobs.  
+- 📑 Sections: About, Skills, Education, Contact.  
+- 📊 Projects and Experience integrated with modular components.  
 
-[![Star History Chart](https://api.star-history.com/svg?repos=shubh73/devfolio&type=Date)](https://www.star-history.com/#shubh73/devfolio&Date)
+---
+
+## 📌 Forking
+
+Yes, you can fork this repo and use it for your own portfolio.  
+All I ask is to leave a little credit somewhere (like the footer). It took significant effort to build this, so please be kind. ❤️
+
+---
+
+## ⭐ Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=harshithch/harshith-portfolio&type=Date)](https://www.star-history.com/#harshithch/harshith-portfolio&Date)
+
+---

@@ -62,7 +62,7 @@ export default function About2({ clientHeight }) {
       // start/stop cycling based on scroll visibility
       const startCycling = () => {
         stopCycling();
-        cycleTimerRef.current = gsap.delayedCall(2.0, nextWord);
+        cycleTimerRef.current = gsap.delayedCall(1.0, nextWord);
       };
       const stopCycling = () => {
         cycleTimerRef.current?.kill?.();
@@ -82,7 +82,7 @@ export default function About2({ clientHeight }) {
       function nextWord() {
         idxRef.current = (idxRef.current + 1) % WORDS.length;
         morphTo(WORDS[idxRef.current], () => {
-          cycleTimerRef.current = gsap.delayedCall(2.0, nextWord);
+          cycleTimerRef.current = gsap.delayedCall(1.0, nextWord);
         });
       }
 
