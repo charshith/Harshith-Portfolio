@@ -1,7 +1,7 @@
 .button {
   --primary: #000000;
-  --primary-dark: #9f55ff;
-  --shadow: #{rgba(#9f55ff, 0.3)};
+  --primary-dark: #eb7431; /* not used directly but kept for parity */
+  --shadow: rgba(235, 116, 49, 0.3); /* brand-tinted shadow */
   --text: #fff;
   --text-opacity: 1;
   --success: #eeecff;
@@ -16,7 +16,7 @@
   --plane-x: 0;
   --plane-y: 0;
   --plane-opacity: 1;
-  --trails: #{rgba(#fff, 0.15)};
+  --trails: rgba(#fff, 0.15);
   --trails-stroke: 57;
   --left-wing-background: var(--primary);
   --left-wing-first-x: 0;
@@ -46,7 +46,8 @@
   --right-body-second-y: 100;
   --right-body-third-x: 100;
   --right-body-third-y: 100;
-  display: inline-flex;  //block
+
+  display: inline-flex;
   cursor: none;
   position: relative;
   padding: 0.65rem 1.75rem;
@@ -61,7 +62,7 @@
   background-clip: padding-box;
   border-radius: 0.4rem;
   background-size: 220%;
-  outline: 2px solid theme("colors.indigo.dark");
+  outline: 2px solid #eb7431; /* brand border */
   color: var(--text);
   transition: all 0.3s ease-in-out;
   -webkit-appearance: none;
@@ -71,7 +72,7 @@
   &:active {
     background-position: 98%;
     color: #fff;
-    box-shadow: 0 0 1rem theme("colors.indigo.dark");
+    box-shadow: 0 0 1rem #eb7431; /* brand glow */
   }
 
   .plane,
@@ -79,6 +80,7 @@
     pointer-events: none;
     position: absolute;
   }
+
   .plane {
     left: 0;
     top: 0;
@@ -87,6 +89,7 @@
     filter: drop-shadow(0 3px 6px var(--shadow));
     transform: translate(calc(var(--x) * 1px), calc(var(--y) * 1px))
       rotate(calc(var(--rotate) * 1deg)) translateZ(0);
+
     .left,
     .right {
       position: absolute;
@@ -100,6 +103,7 @@
           calc(var(--plane-y) * 1px)
         )
         translateZ(0);
+
       &:before,
       &:after {
         content: "";
@@ -123,6 +127,7 @@
         );
       }
     }
+
     .left:after {
       --part-x: -1%;
       --z-index: 1;
@@ -134,6 +139,7 @@
       --third-x: var(--left-body-third-x);
       --third-y: var(--left-body-third-y);
     }
+
     .right:before {
       --part-x: -1%;
       --z-index: 2;
@@ -145,6 +151,7 @@
       --third-x: var(--right-wing-third-x);
       --third-y: var(--right-wing-third-y);
     }
+
     .right:after {
       --part-x: 0;
       --z-index: 1;
@@ -157,6 +164,7 @@
       --third-y: var(--right-body-third-y);
     }
   }
+
   .trails {
     display: block;
     width: 33px;
@@ -177,6 +185,7 @@
     position: relative;
     z-index: 4;
     opacity: var(--text-opacity);
+
     &.success {
       z-index: 0;
       position: absolute;
@@ -186,6 +195,7 @@
       transform: translateX(calc(var(--success-x) * 1px)) translateZ(0);
       opacity: var(--success-opacity);
       color: var(--success);
+
       svg {
         display: inline-block;
         vertical-align: top;

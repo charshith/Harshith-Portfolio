@@ -260,10 +260,16 @@ const Contact = () => {
       <div className="section-container flex flex-col justify-center">
         <div className="flex flex-col contact-wrapper">
           <div className="flex flex-col">
-            <p className="uppercase tracking-widest text-gray-light-1 staggered-reveal">
-              CONTACT
-            </p>
-            <h1 className="text-6xl mt-2 font-medium text-gradient w-fit staggered-reveal">
+            <h1
+              className="text-6xl mt-2 font-medium w-fit staggered-reveal"
+              style={{
+                background: "linear-gradient(90deg, #eb7431, #d26329, #eb7431)",
+                backgroundSize: "300% 300%",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                animation: "gradientMove 4s ease-in-out infinite",
+              }}
+            >
               Contact
             </h1>
           </div>
@@ -278,7 +284,7 @@ const Contact = () => {
               <input
                 type="text"
                 id="name"
-                className="block w-full h-12 sm:h-14 px-4 text-xl sm:text-2xl font-mono outline-none border-2 border-purple bg-transparent rounded-[0.6rem] transition-all duration-200"
+                className="block w-full h-12 sm:h-14 px-4 text-xl sm:text-2xl font-mono outline-none border-2 border-[#EB7431] bg-transparent rounded-[0.6rem] transition-all duration-200"
                 value={formData.name}
                 onChange={handleChange}
                 required
@@ -295,7 +301,7 @@ const Contact = () => {
               <input
                 type="text"
                 id="email"
-                className="block w-full h-12 sm:h-14 px-4 text-xl sm:text-2xl font-mono outline-none border-2 border-purple bg-transparent rounded-[0.6rem] transition-all duration-200"
+                className="block w-full h-12 sm:h-14 px-4 text-xl sm:text-2xl font-mono outline-none border-2 border-[#EB7431] bg-transparent rounded-[0.6rem] transition-all duration-200"
                 value={formData.email}
                 onChange={handleChange}
                 required
@@ -311,7 +317,7 @@ const Contact = () => {
             <div className="relative mt-14">
               <textarea
                 id="message"
-                className="block w-full h-auto min-h-[10rem] max-h-[20rem] sm:h-14 py-2 px-4 text-xl sm:text-2xl font-mono outline-none border-2 border-purple bg-transparent rounded-[0.6rem] transition-all duration-200"
+                className="block w-full h-auto min-h-[10rem] max-h-[20rem] sm:h-14 py-2 px-4 text-xl sm:text-2xl font-mono outline-none border-2 border-[#EB7431] bg-transparent rounded-[0.6rem] transition-all duration-200"
                 value={formData.message}
                 onChange={handleChange}
                 required
@@ -372,14 +378,14 @@ const Contact = () => {
 
         input:hover,
         textarea:hover {
-          box-shadow: 0 0 0.3rem #7000ff;
+          box-shadow: 0 0 0.35rem #eb7431;
         }
 
         input:active,
         input:focus,
         textarea:active,
         textarea:focus {
-          box-shadow: 0 0 0.3rem #000000;
+          box-shadow: 0 0 0.45rem rgba(235, 116, 49, 0.55);
         }
 
         input:focus + label,
