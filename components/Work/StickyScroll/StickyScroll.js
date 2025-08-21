@@ -1,4 +1,3 @@
-// components/Work/StickyScroll/StickyScroll.js
 import React, { useState, useRef } from "react";
 import {
   useMotionValueEvent,
@@ -20,24 +19,32 @@ const linearGradients = [
   "linear-gradient(135deg, #7038ff 0%, #c9c9c9 60%, #9be7ff 100%)",
 ];
 
-/** Parse description → bullets (skips the first line) */
+/** Parse description → bullets (robust: prefers "•" markers) */
 function Description({ text }) {
   if (!text) return null;
-  const lines = text.split("\n").filter(Boolean);
+
+  const hasBullets = /(^|\n)\s*•\s/.test(text);
+  const lines = hasBullets
+    ? text
+        .split(/^•\s*/gm)
+        .map((l) => l.trim())
+        .filter((l) => l.length > 0)
+    : text
+        .split(/\r?\n/)
+        .map((l) => l.trim())
+        .filter((l) => l.length > 0);
+
   return (
     <ul className="mt-4 space-y-3">
-      {lines.map((line, i) => {
-        const clean = line.replace(/^•\s?/, "");
-        return (
-          <li
-            key={i}
-            className="relative pl-6 text-lg leading-relaxed text-slate-300"
-          >
-            <span className="absolute left-0 top-2 block h-2 w-2 rounded-full bg-orange-400 shadow-[0_0_10px_rgba(235,116,49,0.6)]" />
-            <span className="whitespace-pre-line">{clean}</span>
-          </li>
-        );
-      })}
+      {lines.map((line, i) => (
+        <li
+          key={i}
+          className="relative pl-6 text-lg leading-relaxed text-slate-300"
+        >
+          <span className="absolute left-0 top-2 block h-2 w-2 rounded-full bg-orange-400 shadow-[0_0_10px_rgba(235,116,49,0.6)]" />
+          <span className="whitespace-pre-line">{line}</span>
+        </li>
+      ))}
     </ul>
   );
 }
@@ -69,7 +76,6 @@ function TiltPreview({ children }) {
         transition={{ type: "spring", stiffness: 200, damping: 20 }}
         className="relative w-[28rem] h-72 md:h-80 rounded-2xl overflow-visible"
       >
-        {/* No background, no ring, no shadow — just the child card */}
         <div className="absolute inset-0 flex items-center justify-center">
           {children}
         </div>
@@ -77,6 +83,7 @@ function TiltPreview({ children }) {
     </div>
   );
 }
+
 const StickyScroll = ({ contentItems }) => {
   const [activeCard, setActiveCard] = useState(0);
   const containerRef = useRef(null);
@@ -99,20 +106,18 @@ const StickyScroll = ({ contentItems }) => {
     setActiveCard(closest);
   });
 
-  // derive active gradient + fallback
   const gradient =
     linearGradients[activeCard % linearGradients.length] || linearGradients[0];
 
   return (
     <div className="relative">
-      {/* Background pattern (if your DotPattern doesn't support `color`, remove it) */}
+      {/* Background pattern */}
       <DotPattern
         width={22}
         height={22}
         cx={1}
         cy={1}
         cr={1}
-        /* color="rgba(235,116,49,0.22)" */
         className={cn(
           "opacity-[0.10] fill-white/10",
           "[mask-image:linear-gradient(to_bottom_left,white,transparent,transparent)]",
@@ -120,11 +125,8 @@ const StickyScroll = ({ contentItems }) => {
         )}
       />
 
-      {/* top/bottom fades */}
-      <div className="absolute top-0 left-0 right-0 h-12 bg-gradient-to-b from-black to-transparent z-0 rounded-2xl" />
-      <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-black to-transparent z-0 rounded-2xl" />
+      {/* removed top/bottom fade veils since we're not inner-scrolling */}
 
-      {/* main container: grid with fixed preview rail on lg+ */}
       <motion.div
         ref={containerRef}
         animate={{
@@ -134,65 +136,46 @@ const StickyScroll = ({ contentItems }) => {
         className={cn(
           "rounded-2xl outline outline-1 outline-gray-dark-1/50",
           "bg-black/40 backdrop-blur-sm z-10",
-          "p-6 min-h-[30rem] overflow-y-auto no-scrollbar",
+          // no inner scroll or height clamp
+          "p-6 overflow-visible",
           "grid grid-cols-1 lg:grid-cols-[1fr_28rem] gap-10"
         )}
       >
         {/* Left column (text) */}
         <div className="px-2">
           <div className="max-w-2xl">
-            {(contentItems ?? []).map((item, index) => {
-              const lines = (item.description || "")
-                .split("\n")
-                .filter(Boolean);
-              const first = lines[0]?.replace(/^•\s?/, "");
-              const rest = lines.slice(1).join("\n");
-
-              return (
-                <div key={item.title + index} className="my-10">
-                  <motion.h2
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: activeCard === index ? 1 : 0.4, y: 0 }}
-                    className="text-3xl font-semibold tracking-tight"
+            {(contentItems ?? []).map((item, index) => (
+              <div key={item.title + index} className="my-10">
+                <motion.h2
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: activeCard === index ? 1 : 0.4, y: 0 }}
+                  className="text-3xl font-semibold tracking-tight"
+                >
+                  <motion.span
+                    className="bg-clip-text text-transparent"
+                    style={{
+                      backgroundImage:
+                        "linear-gradient(90deg,#ff9a4d,#ffffff,#ff9a4d)",
+                      backgroundSize: "200% 100%",
+                      backgroundPosition:
+                        activeCard === index ? "100% 50%" : "0% 50%",
+                    }}
+                    whileHover={{ backgroundPosition: "100% 50%" }}
+                    transition={{ duration: 1.2, ease: "easeInOut" }}
                   >
-                    <motion.span
-                      className="bg-clip-text text-transparent"
-                      style={{
-                        backgroundImage:
-                          "linear-gradient(90deg,#ff9a4d,#ffffff,#ff9a4d)",
-                        backgroundSize: "200% 100%",
-                        backgroundPosition:
-                          activeCard === index ? "100% 50%" : "0% 50%",
-                      }}
-                      whileHover={{ backgroundPosition: "100% 50%" }}
-                      transition={{ duration: 1.2, ease: "easeInOut" }}
-                    >
-                      {item.title}
-                    </motion.span>
-                  </motion.h2>
-                  {/* First line as meta/role */}
-                  {first && (
-                    <p className="mt-3 text-lg text-slate-200 whitespace-pre-line">
-                      {first}
-                    </p>
-                  )}
+                    {item.title}
+                  </motion.span>
+                </motion.h2>
 
-                  {/* Remaining lines as bullets */}
-                  {rest && <Description text={rest} />}
-                </div>
-              );
-            })}
-            {/* spacer so last item isn't hard against the bottom */}
-            <div className="h-32" />
+                {/* All lines -> bullets */}
+                <Description text={item.description} />
+              </div>
+            ))}
           </div>
         </div>
 
         {/* Right column (sticky, fixed-size preview) */}
-        <TiltPreview>
-          {contentItems?.[activeCard]?.content ?? (
-            <div className="text-white/80">—</div>
-          )}
-        </TiltPreview>
+        <TiltPreview>{contentItems?.[activeCard]?.content ?? null}</TiltPreview>
       </motion.div>
     </div>
   );

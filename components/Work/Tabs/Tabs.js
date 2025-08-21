@@ -35,8 +35,6 @@ const Tab = ({ index, tab, activeTab, handleOnClick, setIsHovering }) => {
           }}
         />
       )}
-
-      {/* flowing gradient title when active, subtle hover otherwise */}
       <motion.span
         className={cn(
           "relative top-[3px] font-medium",
@@ -62,35 +60,19 @@ const Tab = ({ index, tab, activeTab, handleOnClick, setIsHovering }) => {
   );
 };
 
-const TabsContent = ({ tabs, isHovering }) => {
+// ✅ Render only the active tab in normal flow (no absolute, no min-height cap)
+const TabsContent = ({ tabs }) => {
+  const active = tabs[0]; // we always move the clicked tab to the front
+  if (!active) return null;
+
   return (
     <div
-      className="relative w-full min-h-[34rem] md:min-h-[30rem] z-20 pointer-events-auto"
       role="tabpanel"
-      aria-labelledby={`tab-${tabs[0].value}`}
-      id={`tabpanel-${tabs[0].value}`}
+      aria-labelledby={`tab-${active.value}`}
+      id={`tabpanel-${active.value}`}
+      className="w-full mt-24 md:mt-20"
     >
-      {tabs.map((tab, index) => (
-        <motion.div
-          key={tab.value}
-          layoutId={tab.value}
-          style={{
-            scale: 1 - index * 0.1,
-            top: isHovering ? index * -50 : 0,
-            zIndex: -index,
-            opacity: index < 3 ? 1 - index * 0.1 : 0,
-            willChange: "transform, opacity",
-            contain: "layout paint size",
-          }}
-          // one-time entrance instead of continuous bounce
-          initial={{ opacity: 0, y: 10, filter: "blur(2px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 0.35, ease: "easeOut" }}
-          className="absolute inset-0 mt-24 md:mt-20"
-        >
-          {tab.content}
-        </motion.div>
-      ))}
+      {active.content}
     </div>
   );
 };
@@ -128,13 +110,8 @@ const Tabs = ({ tabItems }) => {
         ))}
       </div>
 
-      {/* Content stack */}
-      <TabsContent
-        key={activeTab.value}
-        tabs={tabs}
-        activeTab={activeTab}
-        isHovering={isHovering}
-      />
+      {/* Content (only active tab) */}
+      <TabsContent tabs={tabs} isHovering={isHovering} />
     </div>
   );
 };

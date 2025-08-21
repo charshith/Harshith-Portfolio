@@ -133,36 +133,30 @@ export const PROJECTS = [
   },
 ];
 
-// -----------------------------
-// WORK CONTENTS (Right card is RoleCard)
-// Cohesive, warm orange-anchored gradients per experience.
-// -----------------------------
 export const WORK_CONTENTS = {
   ZYPROVA: [
     {
       title: "Zyprova",
       description: `
-• Founding team engineer at an AI SaaS startup—conversational, real-time planning across Finance, HR, Equity, and fundraising.
-• Designed GraphQL APIs & AI-ready endpoints (Slack + web) for exec Q&A with instant insights.
-• Delivered backend for scenario modeling & hiring plan tools (what-if, forecasts, workforce planning).
-• Unified finance/HR/equity into a single source of truth via optimized mapping APIs.
-• Built a CLI for bulk imports/cleanups—cut onboarding & QA time by 50%+.
-• Hardened data accuracy for board dashboards; drove root-cause fixes and validation.
-• Partnered with design on usable executive dashboards; mentored interns and documented systems.`,
+• Built a conversational AI platform for Finance, HR, and Equity (web + Slack), enabling execs to query data in plain English.
+• Designed/owned microservices + GraphQL gateway; tuned Postgres schemas/caching to cut query latency by ~40% and stabilize analytics.
+• Streamed HR/finance events with Kafka; added audit trails, recovery jobs, and ensured rock-solid data integrity at scale.
+• Delivered “what-if” forecasting APIs for hiring, budgeting, and fundraising; directly used in board reviews and planning.
+• Automated onboarding with CLI tools, CI/CD pipelines, and runtime observability; reduced QA/onboarding time >50% and mentored interns.`,
       content: (
         <RoleCard
           title="Founding Software Engineer"
           meta="Jan 2025 – Present • San Jose, CA"
           chips={[
-            "AI SaaS",
-            "GraphQL",
-            "Scenario Planning",
-            "Data Unification",
-            "Kafka/Streaming",
-            "CLI Automation",
+            "GraphQL Gateway",
+            "Microservices",
+            "Postgres Perf",
+            "Kafka Streams",
+            "What-if APIs",
+            "CLI + CI/CD",
           ]}
-          icon="🧭"
-          gradient={["#EB7431", "#F79E63", "#FFCF9F"]} // orange → peach → cream
+          icon="🚀"
+          gradient={["#EB7431", "#F79E63", "#FFCF9F"]}
         />
       ),
     },
@@ -172,12 +166,11 @@ export const WORK_CONTENTS = {
     {
       title: "GBSN Infotech",
       description: `
-• Built inventory/shipment modules with Angular + Flask for real-time tracking and visibility.
-• Designed secure REST APIs (SQLAlchemy) with strong validation and data integrity.
-• Implemented RBAC, dynamic routing, reusable Angular Material components.
-• Raised coverage with PyTest/Jasmine + docs; improved onboarding velocity.
-• Deployed via Docker + Nginx + uWSGI; standardized multi-env releases.
-• Optimized Postgres with indexes/filters → ~40% faster endpoints.`,
+• Built REST APIs and Angular modules powering inventory & shipment dashboards.  
+• Optimized PostgreSQL with indexing, pagination and query plans → ~40% lower latency on large datasets.  
+• Implemented RBAC and reusable Angular Material components for consistent, secure UX.  
+• Wrote unit tests (PyTest/Jasmine) + docs, improving onboarding and change safety.  
+• Containerized with Docker and fronted by Nginx/uWSGI for reliable multi-env releases.`,
       content: (
         <RoleCard
           title="Full Stack Developer Intern"
@@ -185,12 +178,13 @@ export const WORK_CONTENTS = {
           chips={[
             "REST APIs",
             "Angular + Flask",
-            "Postgres Tuning",
+            "PostgreSQL Tuning",
+            "RBAC",
             "Docker + Nginx",
-            "Testing/Docs",
+            "Testing + Docs",
           ]}
           icon="🛠️"
-          gradient={["#FF7A45", "#FFB86C", "#FFD580"]} // bright orange → amber → gold
+          gradient={["#FF7A45", "#FFB86C", "#FFD580"]}
         />
       ),
     },
@@ -200,24 +194,24 @@ export const WORK_CONTENTS = {
     {
       title: "UNC Charlotte",
       description: `
-• Built crypto analytics dashboard (React + Django REST + PostgreSQL).
-• Integrated real-time price APIs; visualized with Chart.js.
-• Implemented secure auth flows, middleware, reusable backend utilities.
-• Containerized services with Docker; deployed on AWS EC2.
-• Mentored 25+ students in Python/React/full-stack; improved delivery quality.`,
+• Built a crypto dashboard (React + Django REST) with live-pricing APIs and charts.  
+• Added auth, middleware and reusable APIs that sped project setup for students.  
+• Dockerized apps and deployed to AWS EC2 with prod configs and environment split.  
+• Mentored 40+ students via labs/reviews/debugging; improved code quality and habits.
+• Collaborated on AI/data projects, integrating APIs and visualizations into course research.  `,
       content: (
         <RoleCard
           title="Graduate Assistant"
           meta="Aug 2022 – May 2024 • Charlotte, NC"
           chips={[
-            "Django + React",
-            "Crypto APIs",
-            "Charts/Visualization",
-            "AWS + Docker",
+            "React + Django",
+            "Live Data APIs",
+            "Data Viz",
+            "AWS EC2 + Docker",
             "Mentorship",
           ]}
           icon="🎓"
-          gradient={["#FF6F61", "#F59E9E", "#FFD0C4"]} // orange-coral family
+          gradient={["#FF6F61", "#F59E9E", "#FFD0C4"]}
         />
       ),
     },
@@ -227,24 +221,25 @@ export const WORK_CONTENTS = {
     {
       title: "LTI Mindtree",
       description: `
-• Developed Flask microservices powering analytics workflows and KPI dashboards.
-• Built APIs for anomaly detection, what-if scenarios and trend insights.
-• Optimized Snowflake/Postgres with caching + indexed views (≈50% faster).
-• Implemented JWT auth + RBAC; containerized and wired CI/CD with Jenkins.
-• Built Angular components (charts, filters, drill-downs) for interactive insights.`,
+• Delivered Flask microservices for analytics, anomaly detection and forecasting workflows.
+• Exposed predictive model outputs as stable APIs; which enabled product teams to act on insights quickly.
+• Tuned Snowflake/Postgres (caching, indexed views) to cut reporting latency by ~50%.
+• Built Angular modules with JWT + RBAC for secure, role-based access.
+• Automated build/deploy with Jenkins CI/CD; Dockerized services for consistent runtimes.`,
       content: (
         <RoleCard
           title="Full Stack Developer"
           meta="Jan 2021 – Jul 2022 • India"
           chips={[
-            "Flask Microservices",
-            "Anomaly Detection",
+            "Flask Services",
             "Snowflake + Postgres",
-            "CI/CD",
+            "Predictive APIs",
             "Angular UI",
+            "JWT + RBAC",
+            "CI/CD + Docker",
           ]}
-          icon="🧩"
-          gradient={["#FF7849", "#ECA72C", "#FFD25F"]} // orange → goldenrod → yellow
+          icon="📈"
+          gradient={["#FF7849", "#ECA72C", "#FFD25F"]}
         />
       ),
     },
@@ -254,24 +249,24 @@ export const WORK_CONTENTS = {
     {
       title: "Coforge",
       description: `
-• Built a recruitment portal (React + Django + Postgres) to modernize hiring workflows.
-• Designed scalable, secure APIs for candidate/recruiter/interview pipelines.
-• Implemented RBAC, advanced validation, automated emails (Django signals).
-• Improved UX with error boundaries, strong validation and real-time toasts.
-• Containerized backend + Postgres with Docker; deployed to Heroku.`,
+• Modernized recruiting with a portal (React + Django + PostgreSQL) used by recruiters.  
+• Built secure APIs with RBAC, validations and emails (Django signals) for the pipeline.  
+• Reduced drop-offs using toasts, error boundaries and stronger client validation.  
+• Containerized backend + Postgres with Docker and deployed on Heroku for faster releases.  `,
       content: (
         <RoleCard
           title="Software Developer Intern"
           meta="Jun 2019 – Jun 2021 • India"
           chips={[
-            "Recruitment Platform",
-            "Django + React",
-            "RBAC",
+            "Recruiting Portal",
+            "React + Django",
+            "RBAC + Validation",
             "Email Automation",
+            "Postgres",
             "Heroku + Docker",
           ]}
           icon="🧪"
-          gradient={["#FF865E", "#FFAB91", "#FFF1E6"]} // soft orange → coral → cream
+          gradient={["#FF865E", "#FFAB91", "#FFF1E6"]}
         />
       ),
     },
