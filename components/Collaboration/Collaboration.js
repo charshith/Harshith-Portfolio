@@ -78,7 +78,7 @@ const Collaboration = ({ clientHeight }) => {
             className="text-strong font-semibold"
             style={{
               background:
-                "linear-gradient(90deg, #ffffff 0%, #ffffff 50%, #8b31ff 51%, #7000ff 102%)",
+                "linear-gradient(90deg, #ffffff 0%, #ffffff 50%, #f97316 51%, #f97316 100%)",
               backgroundSize: "200% 100%",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
@@ -92,7 +92,7 @@ const Collaboration = ({ clientHeight }) => {
         <p className="mt-6 md:mt-8 opacity-40 text-6xl sm:text-7xl font-semibold whitespace-nowrap ui-right transform-gpu">
           {Array(5)
             .fill(
-              " Agile Development Frontend Development React Native Development "
+              " Agile Development Full Stack Development API & Integration Development Cloud"
             )
             .reduce((str, el) => str.concat(el), "")}{" "}
         </p>
