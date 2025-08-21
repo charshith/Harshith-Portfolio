@@ -83,8 +83,11 @@ const Header = ({ children }) => {
   }, []);
 
   return (
-    <nav className="w-full fixed top-0 py-8 z-50 select-none bg-gradient-to-b from-black shadow-black transition-all duration-300">
-      <div className="section-container relative flex items-center justify-between gap-3">
+    <nav className="w-full fixed top-0 z-50 select-none transition-all duration-300">
+      {/* non-interactive gradient backdrop */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/70 to-transparent" />
+
+      <div className="section-container relative z-10 flex items-center justify-between gap-3 py-6">
         {/* LEFT — badge: show only on Home */}
         <a
           href="#home"
@@ -125,7 +128,7 @@ const Header = ({ children }) => {
                 key={active}
                 href={`#${active}`}
                 onClick={(e) => onNavClick(e, active)}
-                className="pill is-active inline-flex items-center justify-center text-center rounded-full px-3 py-[0.38rem] leading-none text-sm"
+                className="pill is-active cursor-pointer inline-flex items-center justify-center text-center rounded-full px-3 py-[0.38rem] leading-none text-sm"
               >
                 {activeItem?.name || "—"}
               </a>
@@ -135,7 +138,7 @@ const Header = ({ children }) => {
                   key={item.ref}
                   href={`#${item.ref}`}
                   onClick={(e) => onNavClick(e, item.ref)}
-                  className={`pill inline-flex items-center justify-center text-center rounded-full px-3 py-[0.38rem] leading-none text-sm transition-all ${
+                  className={`pill cursor-pointer inline-flex items-center justify-center text-center rounded-full px-3 py-[0.38rem] leading-none text-sm transition-all ${
                     active === item.ref ? "is-active" : ""
                   }`}
                 >

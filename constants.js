@@ -1,3 +1,7 @@
+// constants.js
+// IMPORTANT: use a relative import unless your alias is configured
+import RoleCard from "./components/Work/RoleCard";
+
 // -----------------------------
 // META DATA
 // -----------------------------
@@ -22,26 +26,11 @@ export const METADATA = {
 };
 
 export const MENULINKS = [
-  {
-    name: "Home",
-    ref: "home",
-  },
-  {
-    name: "Skills",
-    ref: "skills",
-  },
-  {
-    name: "Projects",
-    ref: "projects",
-  },
-  {
-    name: "Work",
-    ref: "work",
-  },
-  {
-    name: "Contact",
-    ref: "contact",
-  },
+  { name: "Home", ref: "home" },
+  { name: "Skills", ref: "skills" },
+  { name: "Projects", ref: "projects" },
+  { name: "Work", ref: "work" },
+  { name: "Contact", ref: "contact" },
 ];
 
 // -----------------------------
@@ -64,8 +53,9 @@ export const SOCIAL_LINKS = [
   { name: "twitter", url: "https://x.com/yourhandle" },
 ];
 
-// SKILLS — aligned with resumes
-
+// -----------------------------
+// SKILLS
+// -----------------------------
 export const SKILLS = {
   languagesAndTools: [
     "javascript",
@@ -77,7 +67,6 @@ export const SKILLS = {
     "css3",
     "git",
   ],
-
   librariesAndFrameworks: [
     "react",
     "angular",
@@ -91,9 +80,7 @@ export const SKILLS = {
     "swagger",
     "postman",
   ],
-
   databases: ["postgresql", "mysql", "mongodb", "sqlite", "snowflake"],
-
   other: [
     "docker",
     "aws",
@@ -112,6 +99,9 @@ export const SKILLS = {
   ],
 };
 
+// -----------------------------
+// PROJECTS
+// -----------------------------
 export const PROJECTS = [
   {
     name: "Airbnb",
@@ -143,64 +133,146 @@ export const PROJECTS = [
   },
 ];
 
+// -----------------------------
+// WORK CONTENTS (Right card is RoleCard)
+// Cohesive, warm orange-anchored gradients per experience.
+// -----------------------------
 export const WORK_CONTENTS = {
   ZYPROVA: [
     {
       title: "Zyprova",
-      description:
-        "Founding Software Engineer | Jan 2025 – Present | San Jose, CA\n• Built AI-driven SaaS unifying finance, HR, and equity.\n• Designed microservices & low-latency GraphQL APIs.\n• Optimized Postgres schemas, cutting query times by 40%.\n• Built Kafka pipelines for HR/finance data streaming.\n• Delivered forecasting & simulation APIs for execs.",
+      description: `
+• Founding team engineer at an AI SaaS startup—conversational, real-time planning across Finance, HR, Equity, and fundraising.
+• Designed GraphQL APIs & AI-ready endpoints (Slack + web) for exec Q&A with instant insights.
+• Delivered backend for scenario modeling & hiring plan tools (what-if, forecasts, workforce planning).
+• Unified finance/HR/equity into a single source of truth via optimized mapping APIs.
+• Built a CLI for bulk imports/cleanups—cut onboarding & QA time by 50%+.
+• Hardened data accuracy for board dashboards; drove root-cause fixes and validation.
+• Partnered with design on usable executive dashboards; mentored interns and documented systems.`,
       content: (
-        <div className="h-full w-full flex items-center justify-center text-white px-4">
-          Founding Software Engineer
-        </div>
+        <RoleCard
+          title="Founding Software Engineer"
+          meta="Jan 2025 – Present • San Jose, CA"
+          chips={[
+            "AI SaaS",
+            "GraphQL",
+            "Scenario Planning",
+            "Data Unification",
+            "Kafka/Streaming",
+            "CLI Automation",
+          ]}
+          icon="🧭"
+          gradient={["#EB7431", "#F79E63", "#FFCF9F"]} // orange → peach → cream
+        />
       ),
     },
   ],
+
   GBSN: [
     {
       title: "GBSN Infotech",
-      description:
-        "Full Stack Developer Intern | Jun 2023 – Aug 2023 | Michigan\n• Built reusable REST APIs & service modules for inventory/shipment dashboards.\n• Tuned PostgreSQL queries with indexing/caching → 40% faster responses.\n• Containerized & deployed with Docker + Nginx, standardizing staging workflows.",
+      description: `
+• Built inventory/shipment modules with Angular + Flask for real-time tracking and visibility.
+• Designed secure REST APIs (SQLAlchemy) with strong validation and data integrity.
+• Implemented RBAC, dynamic routing, reusable Angular Material components.
+• Raised coverage with PyTest/Jasmine + docs; improved onboarding velocity.
+• Deployed via Docker + Nginx + uWSGI; standardized multi-env releases.
+• Optimized Postgres with indexes/filters → ~40% faster endpoints.`,
       content: (
-        <div className="h-full w-full flex items-center justify-center text-white px-4">
-          Full Stack Developer Intern
-        </div>
+        <RoleCard
+          title="Full Stack Developer Intern"
+          meta="Jun 2023 – Aug 2023 • Michigan"
+          chips={[
+            "REST APIs",
+            "Angular + Flask",
+            "Postgres Tuning",
+            "Docker + Nginx",
+            "Testing/Docs",
+          ]}
+          icon="🛠️"
+          gradient={["#FF7A45", "#FFB86C", "#FFD580"]} // bright orange → amber → gold
+        />
       ),
     },
   ],
+
   UNCC: [
     {
       title: "UNC Charlotte",
-      description:
-        "Graduate Assistant | Aug 2022 – May 2024 | Charlotte, NC\n• Built Django backends & React dashboards for ops/research.\n• Developed real-time crypto/data APIs and reusable auth.\n• Created React visualizations for data-driven insights.\n• Mentored 40+ students on projects & dev workflows.",
+      description: `
+• Built crypto analytics dashboard (React + Django REST + PostgreSQL).
+• Integrated real-time price APIs; visualized with Chart.js.
+• Implemented secure auth flows, middleware, reusable backend utilities.
+• Containerized services with Docker; deployed on AWS EC2.
+• Mentored 25+ students in Python/React/full-stack; improved delivery quality.`,
       content: (
-        <div className="h-full w-full flex items-center justify-center text-white px-4">
-          Graduate Assistant
-        </div>
+        <RoleCard
+          title="Graduate Assistant"
+          meta="Aug 2022 – May 2024 • Charlotte, NC"
+          chips={[
+            "Django + React",
+            "Crypto APIs",
+            "Charts/Visualization",
+            "AWS + Docker",
+            "Mentorship",
+          ]}
+          icon="🎓"
+          gradient={["#FF6F61", "#F59E9E", "#FFD0C4"]} // orange-coral family
+        />
       ),
     },
   ],
+
   LTIMINDTREE: [
     {
       title: "LTI Mindtree",
-      description:
-        "Full Stack Developer | Jan 2021 – Jul 2022 | India\n• Developed Flask microservices for supply chain analytics.\n• Implemented anomaly detection & demand forecasting.\n• Optimized Snowflake/Postgres queries (−50% reporting latency).\n• Automated ETL & reporting pipelines.\n• Built Angular UI with JWT/RBAC security.",
+      description: `
+• Developed Flask microservices powering analytics workflows and KPI dashboards.
+• Built APIs for anomaly detection, what-if scenarios and trend insights.
+• Optimized Snowflake/Postgres with caching + indexed views (≈50% faster).
+• Implemented JWT auth + RBAC; containerized and wired CI/CD with Jenkins.
+• Built Angular components (charts, filters, drill-downs) for interactive insights.`,
       content: (
-        <div className="h-full w-full flex items-center justify-center text-white px-4">
-          Full Stack Developer
-        </div>
+        <RoleCard
+          title="Full Stack Developer"
+          meta="Jan 2021 – Jul 2022 • India"
+          chips={[
+            "Flask Microservices",
+            "Anomaly Detection",
+            "Snowflake + Postgres",
+            "CI/CD",
+            "Angular UI",
+          ]}
+          icon="🧩"
+          gradient={["#FF7849", "#ECA72C", "#FFD25F"]} // orange → goldenrod → yellow
+        />
       ),
     },
   ],
+
   COFORGE: [
     {
       title: "Coforge",
-      description:
-        "Software Developer Intern | Jun 2019 – Jun 2021 | India\n• Built recruiter management platform using Django APIs & PostgreSQL.\n• Designed secure role-based dashboards with React for HR teams.\n• Automated email workflows & validations, reducing hiring errors by 40%.\n• Maintained deployments via Heroku with Docker support.",
+      description: `
+• Built a recruitment portal (React + Django + Postgres) to modernize hiring workflows.
+• Designed scalable, secure APIs for candidate/recruiter/interview pipelines.
+• Implemented RBAC, advanced validation, automated emails (Django signals).
+• Improved UX with error boundaries, strong validation and real-time toasts.
+• Containerized backend + Postgres with Docker; deployed to Heroku.`,
       content: (
-        <div className="h-full w-full flex items-center justify-center text-white px-4">
-          Software Developer Intern
-        </div>
+        <RoleCard
+          title="Software Developer Intern"
+          meta="Jun 2019 – Jun 2021 • India"
+          chips={[
+            "Recruitment Platform",
+            "Django + React",
+            "RBAC",
+            "Email Automation",
+            "Heroku + Docker",
+          ]}
+          icon="🧪"
+          gradient={["#FF865E", "#FFAB91", "#FFF1E6"]} // soft orange → coral → cream
+        />
       ),
     },
   ],
